@@ -3,6 +3,8 @@ Ubuntu Server OS — Application Factory
 Flask initialization, database binding, security middleware, and routing.
 """
 
+import os
+from typing import Optional
 from flask import Flask
 from werkzeug.exceptions import HTTPException
 
@@ -39,12 +41,14 @@ class UbuntuServerApp(Flask):
     terminal_session_manager: TerminalSessionManager
 
 
-def create_app(config_name: str = "default") -> UbuntuServerApp:
+def create_app(config_name: Optional[str] = None) -> UbuntuServerApp:
     """Create and configure the Ubuntu Server OS Flask application."""
+    if config_name is None:
+        config_name = os.environ.get("UBUNTU_OS_ENV", "production")
     app = UbuntuServerApp(__name__)
 
     # Load configuration
-    cfg_class = config_by_name.get(config_name, config_by_name["default"])
+    cfg_class = config_by_name.get(config_name, config_by_name.get("production", config_by_name["default"]))
     app.config.from_object(cfg_class)
 
     # Initialize Database & Repositories

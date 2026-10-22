@@ -82,17 +82,10 @@ if [[ -f "${SCRIPT_DIR}/deploy/sudoers.d/99-ubuntu-os-helper" ]]; then
 fi
 
 # 8. Install Systemd Units
-log_info "Installing systemd services..."
+log_info "Installing systemd service..."
 cp "${SCRIPT_DIR}/deploy/systemd/ubuntu-os.service" /etc/systemd/system/
-if [[ -f "${SCRIPT_DIR}/deploy/systemd/ubuntu-term.service" ]]; then
-    cp "${SCRIPT_DIR}/deploy/systemd/ubuntu-term.service" /etc/systemd/system/
-fi
-
 systemctl daemon-reload
 systemctl enable ubuntu-os.service
-if [[ -f /etc/systemd/system/ubuntu-term.service ]]; then
-    systemctl enable ubuntu-term.service
-fi
 
 # 9. Configure Self-Signed SSL if Certificates Missing
 CERT_DIR="/etc/ssl/certs"
@@ -118,9 +111,6 @@ systemctl reload nginx
 # 11. Start Services
 log_info "Starting Ubuntu Server OS backend daemon..."
 systemctl restart ubuntu-os.service
-if [[ -f /etc/systemd/system/ubuntu-term.service ]]; then
-    systemctl restart ubuntu-term.service 2>/dev/null || true
-fi
 
 log_ok "Deployment completed successfully!"
 echo ""

@@ -4,23 +4,22 @@ After=network.target local-fs.target
 Wants=network-online.target
 
 [Service]
-Type=notify
+Type=simple
 User=ubuntulos
 Group=ubuntulos
 WorkingDirectory=/opt/ubuntu-server-os
 Environment="PATH=/opt/ubuntu-server-os/.venv/bin:/usr/local/bin:/usr/bin:/bin"
 Environment="UBUNTU_OS_ENV=production"
+Environment="UBUNTU_OS_DB_PATH=/var/lib/ubuntu-server-os/ubuntu_os.db"
 Environment="PYTHONUNBUFFERED=1"
 
-# Execute Gunicorn binding to strict Unix Domain Socket
+# Execute Gunicorn binding to Unix Domain Socket
 ExecStart=/opt/ubuntu-server-os/.venv/bin/gunicorn \
-    --workers 4 \
-    --worker-class gthread \
-    --threads 4 \
-    --timeout 30 \
+    --workers 2 \
+    --timeout 60 \
     --bind unix:/run/ubuntu-server-os/ubuntu-os.sock \
-    --umask 0077 \
-    "server:create_app('production')"
+    --umask 007 \
+    "server:create_app()"
 
 ExecReload=/bin/kill -s HUP $MAINPID
 KillMode=mixed
