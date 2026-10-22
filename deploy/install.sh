@@ -46,6 +46,7 @@ if ! id "$SERVICE_USER" &>/dev/null; then
 else
     log_info "User '${SERVICE_USER}' already exists."
 fi
+usermod -aG systemd-journal "$SERVICE_USER" 2>/dev/null || true
 
 # 4. Prepare Directories and Permissions
 log_info "Creating production filesystem hierarchies..."
