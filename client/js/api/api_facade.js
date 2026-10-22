@@ -68,4 +68,32 @@ export class ApiFacade {
       system: { hostname: "ubuntu-server-prod-01", os: "Linux", release: "6.8.0-ubuntu", arch: "x86_64" }
     };
   }
+
+  async login(username, password) {
+    if (this.mode === "live") {
+      return this.liveClient.login(username, password);
+    }
+    return { status: "success", user: { username, role: "admin" } };
+  }
+
+  async logout() {
+    if (this.mode === "live") {
+      return this.liveClient.logout();
+    }
+    return { status: "success" };
+  }
+
+  async getSession() {
+    if (this.mode === "live") {
+      return this.liveClient.getSession();
+    }
+    return { status: "success", user: { username: "operator", role: "admin" } };
+  }
+
+  async executeTerminalCommand(command, cwd = "/home/operator") {
+    if (this.mode === "live") {
+      return this.liveClient.executeTerminalCommand(command, cwd);
+    }
+    return null;
+  }
 }

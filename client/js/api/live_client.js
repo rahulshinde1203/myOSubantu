@@ -282,4 +282,11 @@ export class LiveClient {
   async getSystemInfo() {
     return this._fetch("/api/v1/system/info");
   }
+
+  async executeTerminalCommand(command, cwd = "/home/operator") {
+    return this._fetch("/api/v1/terminal/exec", {
+      method: "POST",
+      body: JSON.stringify({ command, cwd })
+    });
+  }
 }

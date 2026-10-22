@@ -140,7 +140,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const isMobile = window.innerWidth < 768;
     const container = document.createElement("div");
     container.style.cssText = "height:100%;display:flex;flex-direction:column;";
-    new TerminalApp(container);
+    new TerminalApp(container, api);
 
     windowManager.createWindow({
       id: "terminal-win",
@@ -224,6 +224,108 @@ document.addEventListener("DOMContentLoaded", () => {
     modalBackdrop.classList.remove("open");
     toast.error("Host Reboot Scheduled", "Server reboot signal sent. Remote session will disconnect.");
   });
+
+  // 8. Setup macOS Login / Lockscreen Modal
+  const loginModal = document.getElementById("login-modal");
+  const loginForm = document.getElementById("login-form");
+  const loginUsernameInput = document.getElementById("login-username");
+  const loginPasswordInput = document.getElementById("login-password");
+  const loginErrorMsg = document.getElementById("login-error-msg");
+  const skipLoginBtn = document.getElementById("btn-skip-login");
+  const userAvatar = document.querySelector('header div[title*="Logged in"]');
+
+  const showLogin = () => {
+    if (loginModal) {
+      if (loginErrorMsg) loginErrorMsg.style.display = "none";
+      loginModal.classList.add("open");
+      if (loginPasswordInput) {
+        loginPasswordInput.value = "";
+        setTimeout(() => loginPasswordInput.focus(), 100);
+      }
+    }
+  };
+
+  const hideLogin = () => {
+    if (loginModal) loginModal.classList.remove("open");
+  };
+
+  if (userAvatar) {
+    userAvatar.addEventListener("click", () => showLogin());
+  }
+
+  if (skipLoginBtn) {
+    skipLoginBtn.addEventListener("click", () => {
+      hideLogin();
+      api.setMode("mock");
+      appState.mode = "mock";
+      toast.info("Mock Mode", "Switched to prototype demo data.");
+    });
+  }
+
+  window.addEventListener("ubuntu:auth:unauthorized", () => {
+    if (api.getMode() === "live") showLogin();
+  });
+
+  if (loginForm) {
+    loginForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const username = loginUsernameInput.value.trim();
+      const password = loginPasswordInput.value;
+      const submitBtn = document.getElementById("btn-login-submit");
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = "<span>Verifying...</span>";
+      }
+
+      try {
+        const res = await api.login(username, password);
+        if (res && res.status === "success") {
+          hideLogin();
+          api.setMode("live");
+          appState.mode = "live";
+          toast.success("Authentication Success", `Connected as ${username}. Live kernel telemetry active.`);
+          if (userAvatar) {
+            const initialSpan = userAvatar.querySelector("span");
+            if (initialSpan) initialSpan.textContent = username.charAt(0).toUpperCase();
+            userAvatar.title = `Logged in as ${username}`;
+          }
+          setTimeout(() => {
+            window.location.reload();
+          }, 600);
+        } else {
+          if (loginErrorMsg) {
+            loginErrorMsg.textContent = res?.detail || res?.message || "Invalid credentials.";
+            loginErrorMsg.style.display = "block";
+          }
+        }
+      } catch (err) {
+        if (loginErrorMsg) {
+          loginErrorMsg.textContent = err.message || "Authentication failed. Check credentials.";
+          loginErrorMsg.style.display = "block";
+        }
+      } finally {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = "<span>Sign In & Unlock</span>";
+        }
+      }
+    });
+  }
+
+  // Check initial session if in live mode
+  if (api.getMode() === "live") {
+    api.getSession().then(res => {
+      if (!res || res.status !== "success") {
+        showLogin();
+      } else if (res.user && userAvatar) {
+        const initialSpan = userAvatar.querySelector("span");
+        if (initialSpan) initialSpan.textContent = res.user.username.charAt(0).toUpperCase();
+        userAvatar.title = `Logged in as ${res.user.username}`;
+      }
+    }).catch(() => {
+      showLogin();
+    });
+  }
 
   // Hash navigation support for direct visual previews
   if (window.location.hash === "#multitask") {

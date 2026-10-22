@@ -3,22 +3,19 @@
  */
 
 export class TerminalApp {
-  constructor(container) {
+  constructor(container, apiFacade = null) {
     this.container = container;
+    this.api = apiFacade;
     this.cmdHistory = [];
     this.historyIndex = -1;
+    this.cwd = "/opt/ubuntu-server-os";
     this.lines = [
-      { text: "Welcome to Ubuntu 24.04 LTS (GNU/Linux 6.8.0-31-generic x86_64)", type: "normal" },
-      { text: " * Documentation:  https://help.ubuntu.com", type: "normal" },
-      { text: " * Management:     https://landscape.canonical.com", type: "normal" },
-      { text: " * Support:        https://ubuntu.com/pro", type: "normal" },
+      { text: "Welcome to Ubuntu 24.04 LTS (GNU/Linux 6.8.0-ubuntu x86_64)", type: "normal" },
+      { text: " * Host:           srv-prod-node01.lan (187.127.133.169)", type: "normal" },
+      { text: " * Management:     Ubuntu Server OS Web Workstation", type: "normal" },
+      { text: " * Live Shell:     Direct host bash execution enabled", type: "output-success" },
       { text: "", type: "normal" },
-      { text: "System information as of Thu Oct 22 13:30:00 UTC 2026", type: "normal" },
-      { text: "  System load:  0.24               Processes:             142", type: "normal" },
-      { text: "  Usage of /:   42.2% of 200.0GB   Users logged in:       1", type: "normal" },
-      { text: "  Memory usage: 48%                IPv4 address for eth0: 10.0.10.42", type: "normal" },
-      { text: "", type: "normal" },
-      { text: "Type 'help' to view available system commands.", type: "output-info" }
+      { text: "Type any Linux bash command to execute directly on your server.", type: "output-info" }
     ];
     this.render();
   }
@@ -30,7 +27,7 @@ export class TerminalApp {
           ${this.lines.map(l => `<div class="terminal-line ${l.type}">${l.text}</div>`).join("")}
         </div>
         <div class="terminal-input-row">
-          <span class="terminal-prompt">operator@srv-prod-node01:~$</span>
+          <span class="terminal-prompt" id="term-active-prompt">operator@srv-prod-node01:${this.cwd}$</span>
           <input type="text" class="terminal-cmd-input" id="term-input" autocomplete="off" spellcheck="false">
         </div>
       </div>
@@ -41,14 +38,14 @@ export class TerminalApp {
 
     viewport.addEventListener("click", () => input.focus());
 
-    input.addEventListener("keydown", (e) => {
+    input.addEventListener("keydown", async (e) => {
       if (e.key === "Enter") {
         const cmd = input.value.trim();
         if (cmd) {
           this.cmdHistory.push(cmd);
           this.historyIndex = this.cmdHistory.length;
-          this.executeCommand(cmd);
           input.value = "";
+          await this.executeCommand(cmd);
         }
       } else if (e.key === "ArrowUp") {
         if (this.cmdHistory.length > 0 && this.historyIndex > 0) {
@@ -69,14 +66,15 @@ export class TerminalApp {
     });
   }
 
-  executeCommand(cmd) {
+  async executeCommand(cmd) {
     const historyEl = this.container.querySelector("#term-history");
     const viewport = this.container.querySelector("#term-viewport");
+    const promptEl = this.container.querySelector("#term-active-prompt");
 
     // Add user prompt line
     const promptLine = document.createElement("div");
     promptLine.className = "terminal-line";
-    promptLine.innerHTML = `<span class="terminal-prompt">operator@srv-prod-node01:~$</span> <span>${this.escapeHtml(cmd)}</span>`;
+    promptLine.innerHTML = `<span class="terminal-prompt">operator@srv-prod-node01:${this.escapeHtml(this.cwd)}$</span> <span>${this.escapeHtml(cmd)}</span>`;
     historyEl.appendChild(promptLine);
 
     const lower = cmd.toLowerCase().trim();
@@ -87,6 +85,48 @@ export class TerminalApp {
     }
 
     let outputLines = [];
+
+    // 1. LIVE SERVER EXECUTION
+    if (this.api && this.api.getMode() === "live") {
+      try {
+        const res = await this.api.executeTerminalCommand(cmd, this.cwd);
+        if (res) {
+          if (res.cwd) {
+            this.cwd = res.cwd;
+            if (promptEl) promptEl.textContent = `operator@srv-prod-node01:${this.cwd}$`;
+          }
+          if (res.stdout) {
+            res.stdout.split("\n").forEach(line => {
+              if (line !== "") outputLines.push({ text: line, type: "normal" });
+            });
+          }
+          if (res.stderr) {
+            res.stderr.split("\n").forEach(line => {
+              if (line !== "") outputLines.push({ text: line, type: "output-error" });
+            });
+          }
+          if (!res.stdout && !res.stderr && res.exit_code === 0) {
+            // silent execution like cd or export
+          }
+        }
+      } catch (err) {
+        outputLines.push({ 
+          text: `[AUTH ERROR] Authentication session required to execute host commands. Click your Avatar in the menubar or refresh to sign in.`, 
+          type: "output-warning" 
+        });
+      }
+
+      if (outputLines.length > 0) {
+        outputLines.forEach(lineObj => {
+          const lEl = document.createElement("div");
+          lEl.className = `terminal-line ${lineObj.type}`;
+          lEl.textContent = lineObj.text;
+          historyEl.appendChild(lEl);
+        });
+        viewport.scrollTop = viewport.scrollHeight;
+        return;
+      }
+    }
 
     if (lower === "help") {
       outputLines = [

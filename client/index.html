@@ -156,6 +156,36 @@
     </div>
   </div>
 
+  <!-- MACOS LOCKSCREEN & LOGIN MODAL -->
+  <div class="modal-backdrop" id="login-modal" role="dialog" aria-modal="true" aria-labelledby="modal-login-title" style="z-index:999999;">
+    <div class="modal-dialog" style="max-width:360px;text-align:center;padding:28px 24px;border:1px solid rgba(255,255,255,0.15);background:rgba(15,23,42,0.85);backdrop-filter:blur(32px);box-shadow:0 24px 60px rgba(0,0,0,0.6);">
+      <div style="width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg, #E95420, #77216F);display:flex;align-items:center;justify-content:center;margin:0 auto 16px auto;box-shadow:0 8px 24px rgba(233,84,32,0.35);">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+      </div>
+      <h2 id="modal-login-title" style="font-size:18px;font-weight:700;color:#F8FAFC;margin-bottom:4px;">Ubuntu Server OS</h2>
+      <p style="font-size:12px;color:#94A3B8;margin-bottom:20px;">Sign in to stream live host telemetry & unlock terminal</p>
+      
+      <form id="login-form" style="display:flex;flex-direction:column;gap:12px;text-align:left;">
+        <div>
+          <label style="font-size:11px;font-weight:600;color:#CBD5E1;text-transform:uppercase;letter-spacing:0.5px;display:block;margin-bottom:4px;">Username</label>
+          <input type="text" id="login-username" value="Rahul" required autocomplete="username" placeholder="Username" style="width:100%;padding:10px 14px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.15);border-radius:8px;color:#FFFFFF;font-size:13px;outline:none;">
+        </div>
+        <div>
+          <label style="font-size:11px;font-weight:600;color:#CBD5E1;text-transform:uppercase;letter-spacing:0.5px;display:block;margin-bottom:4px;">Password</label>
+          <input type="password" id="login-password" required autocomplete="current-password" placeholder="Enter password..." style="width:100%;padding:10px 14px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.15);border-radius:8px;color:#FFFFFF;font-size:13px;outline:none;">
+        </div>
+        <div id="login-error-msg" style="display:none;color:#FF5263;font-size:12px;padding:4px 0;"></div>
+        <button type="submit" id="btn-login-submit" class="btn btn-primary" style="margin-top:8px;padding:10px 16px;width:100%;display:flex;align-items:center;justify-content:center;gap:6px;font-weight:600;background:linear-gradient(135deg, #E95420, #C74316);border:none;cursor:pointer;">
+          <span>Sign In & Unlock</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+        </button>
+      </form>
+      <div style="margin-top:14px;">
+        <button type="button" id="btn-skip-login" style="background:transparent;border:none;color:#64748B;font-size:11px;cursor:pointer;text-decoration:underline;">Continue with Demo / Mock Data</button>
+      </div>
+    </div>
+  </div>
+
   <!-- APPLICATION ENTRYPOINT (ES MODULE) -->
   <script type="module" src="js/main.js"></script>
 </body>

@@ -106,3 +106,93 @@ def close_terminal_session(session_id):
         "status": "success",
         "message": f"Terminal session '{session_id}' terminated."
     }), 200
+
+
+@terminal_bp.route("/exec", methods=["POST"])
+@require_auth
+def execute_terminal_command():
+    """
+    Execute real shell commands in a managed bash subprocess on the server
+    and return actual stdout and stderr.
+    """
+    import os
+    import subprocess
+
+    data = request.get_json() or {}
+    command = data.get("command", "").strip()
+    cwd = data.get("cwd", "/home/operator")
+
+    if not command:
+        return jsonify({
+            "status": "success",
+            "stdout": "",
+            "stderr": "",
+            "exit_code": 0,
+            "cwd": cwd
+        }), 200
+
+    # Resolve target working directory safely
+    target_cwd = cwd
+    if not os.path.exists(target_cwd) or not os.path.isdir(target_cwd):
+        target_cwd = "/opt/ubuntu-server-os"
+        if not os.path.exists(target_cwd):
+            target_cwd = "/"
+
+    # Handle cd built-in command
+    if command.startswith("cd ") or command == "cd":
+        parts = command.split(None, 1)
+        dest = parts[1].strip() if len(parts) > 1 else "~"
+        if dest == "~":
+            dest = os.path.expanduser("~")
+        elif not dest.startswith("/"):
+            dest = os.path.normpath(os.path.join(target_cwd, dest))
+
+        if os.path.exists(dest) and os.path.isdir(dest):
+            return jsonify({
+                "status": "success",
+                "stdout": "",
+                "stderr": "",
+                "exit_code": 0,
+                "cwd": dest
+            }), 200
+        else:
+            return jsonify({
+                "status": "success",
+                "stdout": "",
+                "stderr": f"bash: cd: {dest}: No such file or directory\n",
+                "exit_code": 1,
+                "cwd": target_cwd
+            }), 200
+
+    try:
+        proc = subprocess.run(
+            ["/bin/bash", "-c", command],
+            cwd=target_cwd,
+            capture_output=True,
+            text=True,
+            timeout=25.0
+        )
+        return jsonify({
+            "status": "success",
+            "stdout": proc.stdout,
+            "stderr": proc.stderr,
+            "exit_code": proc.returncode,
+            "cwd": target_cwd
+        }), 200
+    except subprocess.TimeoutExpired:
+        return jsonify({
+            "status": "fail",
+            "stdout": "",
+            "stderr": "Command execution timed out after 25 seconds.\n",
+            "exit_code": 124,
+            "cwd": target_cwd
+        }), 200
+    except Exception as e:
+        return jsonify({
+            "status": "fail",
+            "stdout": "",
+            "stderr": f"Execution error: {str(e)}\n",
+            "exit_code": 1,
+            "cwd": target_cwd
+        }), 200
+
