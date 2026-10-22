@@ -78,6 +78,7 @@ class ProductionConfig(Config):
     DEBUG = False
     TESTING = False
     SESSION_COOKIE_SECURE = True
+    DATABASE_PATH = os.environ.get("UBUNTU_OS_DB_PATH", "/var/lib/ubuntu-server-os/ubuntu_os.db")
 
 
 config_by_name = {
