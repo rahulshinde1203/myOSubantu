@@ -60,7 +60,7 @@ export class LiveClient {
       } catch (e) {
         errData = { detail: res.statusText, status: res.status };
       }
-      const err = new Error(errData.detail || errData.title || "API Request Failed");
+      const err = new Error(errData.detail || errData.title || (res.statusText ? `HTTP ${res.status}: ${res.statusText}` : `HTTP ${res.status} Error`));
       err.data = errData;
       err.status = res.status;
       throw err;

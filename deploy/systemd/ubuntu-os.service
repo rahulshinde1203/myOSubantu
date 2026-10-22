@@ -13,12 +13,11 @@ Environment="UBUNTU_OS_ENV=production"
 Environment="UBUNTU_OS_DB_PATH=/var/lib/ubuntu-server-os/ubuntu_os.db"
 Environment="PYTHONUNBUFFERED=1"
 
-# Execute Gunicorn binding to Unix Domain Socket
+# Execute Gunicorn binding to localhost port 5000
 ExecStart=/opt/ubuntu-server-os/.venv/bin/gunicorn \
     --workers 2 \
     --timeout 60 \
-    --bind unix:/run/ubuntu-server-os/ubuntu-os.sock \
-    --umask 007 \
+    --bind 127.0.0.1:5000 \
     "server:create_app()"
 
 ExecReload=/bin/kill -s HUP $MAINPID
