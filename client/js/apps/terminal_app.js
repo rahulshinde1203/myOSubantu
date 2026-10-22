@@ -148,12 +148,56 @@ export class TerminalApp {
         { text: "     Memory: 48.2M", type: "normal" },
         { text: "        CPU: 1.218s", type: "normal" }
       ];
-    } else if (lower === "htop") {
+    } else if (lower.startsWith("sudo su") || lower.startsWith("sudo -i") || lower === "su" || lower.startsWith("sudo bash")) {
       outputLines = [
-        { text: "[Switching to htop graphical monitor view in workspace...]", type: "output-info" }
+        { text: "[SECURITY] Interactive root shell elevation via 'sudo su' is restricted in the web console.", type: "output-warning" },
+        { text: "Non-root containment sandbox active. Use your SSH console for direct root administration.", type: "output-info" }
       ];
-      const htopTab = document.querySelector('.segmented-tab[data-view="htop"]');
-      if (htopTab) htopTab.click();
+    } else if (lower.startsWith("sudo ")) {
+      outputLines = [
+        { text: `[sudo] command executed in scoped unprivileged container: ${this.escapeHtml(cmd.substring(5))}`, type: "output-info" }
+      ];
+    } else if (lower === "pwd") {
+      outputLines = [
+        { text: "/home/operator", type: "normal" }
+      ];
+    } else if (lower === "date") {
+      outputLines = [
+        { text: new Date().toUTCString(), type: "normal" }
+      ];
+    } else if (lower === "ip a" || lower === "ifconfig" || lower === "ip addr") {
+      outputLines = [
+        { text: "1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN", type: "output-info" },
+        { text: "    inet 127.0.0.1/8 scope host lo", type: "normal" },
+        { text: "2: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc mq state UP qlen 1000", type: "output-info" },
+        { text: "    inet 187.127.133.169/24 brd 187.127.133.255 scope global eth0", type: "output-success" },
+        { text: "3: wg0: <POINTOPOINT,NOARP,UP,LOWER_UP> mtu 1420 qdisc noqueue state UNKNOWN", type: "output-info" },
+        { text: "    inet 100.84.12.9/32 scope global wg0", type: "output-success" }
+      ];
+    } else if (lower === "ps" || lower === "ps aux") {
+      outputLines = [
+        { text: "USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND", type: "output-info" },
+        { text: "root           1  0.0  0.1 168924 13540 ?        Ss   12:00   0:01 /sbin/init", type: "normal" },
+        { text: "systemd+     412  0.0  0.1  24120 12040 ?        Ss   12:00   0:00 /lib/systemd/systemd-journald", type: "normal" },
+        { text: "root         812  0.0  0.1  15820  8420 ?        Ss   12:00   0:00 /usr/sbin/sshd -D", type: "normal" },
+        { text: "www-data    1421  0.0  0.3  58420 28140 ?        S    12:04   0:00 nginx: worker process", type: "normal" },
+        { text: "ubuntulos 403619  0.2  0.8 142100 68420 ?        S    12:09   0:02 gunicorn: master [ubuntu-os]", type: "output-success" },
+        { text: "operator  405112  0.0  0.0  10420  3840 pts/0    Ss   12:26   0:00 -bash", type: "normal" }
+      ];
+    } else if (lower.startsWith("cat ")) {
+      const target = cmd.substring(4).trim();
+      if (target === ".bashrc") {
+        outputLines = [
+          { text: "# ~/.bashrc: executed by bash(1) for non-login shells.", type: "normal" },
+          { text: "export HISTCONTROL=ignoreboth", type: "normal" },
+          { text: "export PS1='\\[\\033[01;32m\\]\\u@\\h\\[\\033[00m\\]:\\[\\033[01;34m\\]\\w\\[\\033[00m\\]\\$ '", type: "output-info" },
+          { text: "alias ll='ls -alF'", type: "normal" }
+        ];
+      } else {
+        outputLines = [
+          { text: `[Safe Preview] Content of ${this.escapeHtml(target)} (read-only)`, type: "output-info" }
+        ];
+      }
     } else {
       outputLines = [
         { text: `bash: ${cmd}: command not found. Type 'help' to list available system utilities.`, type: "output-error" }
