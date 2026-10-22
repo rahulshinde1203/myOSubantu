@@ -232,7 +232,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const loginPasswordInput = document.getElementById("login-password");
   const loginErrorMsg = document.getElementById("login-error-msg");
   const skipLoginBtn = document.getElementById("btn-skip-login");
-  const userAvatar = document.querySelector('header div[title*="Logged in"]');
+  const userAvatar = document.getElementById("tb-user-avatar");
+  const userLabel = document.getElementById("tb-user-label");
+  const userInitial = document.getElementById("tb-user-initial");
 
   const showLogin = () => {
     if (loginModal) {
@@ -240,7 +242,7 @@ document.addEventListener("DOMContentLoaded", () => {
       loginModal.classList.add("open");
       if (loginPasswordInput) {
         loginPasswordInput.value = "";
-        setTimeout(() => loginPasswordInput.focus(), 100);
+        setTimeout(() => loginPasswordInput.focus(), 150);
       }
     }
   };
@@ -248,6 +250,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const hideLogin = () => {
     if (loginModal) loginModal.classList.remove("open");
   };
+
+  eventBus.on("modal:login", () => showLogin());
 
   if (userAvatar) {
     userAvatar.addEventListener("click", () => showLogin());
@@ -263,7 +267,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   window.addEventListener("ubuntu:auth:unauthorized", () => {
-    if (api.getMode() === "live") showLogin();
+    showLogin();
   });
 
   if (loginForm) {
@@ -284,14 +288,12 @@ document.addEventListener("DOMContentLoaded", () => {
           api.setMode("live");
           appState.mode = "live";
           toast.success("Authentication Success", `Connected as ${username}. Live kernel telemetry active.`);
-          if (userAvatar) {
-            const initialSpan = userAvatar.querySelector("span");
-            if (initialSpan) initialSpan.textContent = username.charAt(0).toUpperCase();
-            userAvatar.title = `Logged in as ${username}`;
-          }
+          if (userLabel) userLabel.textContent = username;
+          if (userInitial) userInitial.textContent = username.charAt(0).toUpperCase();
+          if (userAvatar) userAvatar.title = `Logged in as ${username}`;
           setTimeout(() => {
             window.location.reload();
-          }, 600);
+          }, 500);
         } else {
           if (loginErrorMsg) {
             loginErrorMsg.textContent = res?.detail || res?.message || "Invalid credentials.";
@@ -312,20 +314,18 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Check initial session if in live mode
-  if (api.getMode() === "live") {
-    api.getSession().then(res => {
-      if (!res || res.status !== "success") {
-        showLogin();
-      } else if (res.user && userAvatar) {
-        const initialSpan = userAvatar.querySelector("span");
-        if (initialSpan) initialSpan.textContent = res.user.username.charAt(0).toUpperCase();
-        userAvatar.title = `Logged in as ${res.user.username}`;
-      }
-    }).catch(() => {
+  // Check initial session
+  api.getSession().then(res => {
+    if (!res || res.status !== "success" || !res.user) {
       showLogin();
-    });
-  }
+    } else {
+      if (userLabel) userLabel.textContent = res.user.username;
+      if (userInitial) userInitial.textContent = res.user.username.charAt(0).toUpperCase();
+      if (userAvatar) userAvatar.title = `Logged in as ${res.user.username}`;
+    }
+  }).catch(() => {
+    showLogin();
+  });
 
   // Hash navigation support for direct visual previews
   if (window.location.hash === "#multitask") {
@@ -437,6 +437,7 @@ function initTopMenubar(apiFacade, spotlight, controlCenter, notificationShelf) 
     if (newMode === "live") {
       modeBadge.className = "mode-badge live";
       modeText.textContent = "LIVE SECURE";
+      eventBus.emit("modal:login");
     } else {
       modeBadge.className = "mode-badge";
       modeText.textContent = "MOCK DATA";
