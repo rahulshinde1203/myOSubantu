@@ -24,8 +24,8 @@ A production-grade, hardened web workstation and observability control panel for
 ### 2. Setup & Installation
 ```bash
 # 1. Clone repository
-git clone https://github.com/rahulshinde1203/myOSubuntu.git
-cd myOSubuntu
+git clone https://github.com/rahulshinde1203/myOSubantu.git
+cd myOSubantu
 
 # 2. Set up Python virtual environment
 python3 -m venv .venv
