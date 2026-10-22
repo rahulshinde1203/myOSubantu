@@ -173,7 +173,12 @@
         </div>
         <div>
           <label style="font-size:11px;font-weight:600;color:#CBD5E1;text-transform:uppercase;letter-spacing:0.5px;display:block;margin-bottom:4px;">Password</label>
-          <input type="password" id="login-password" required autocomplete="current-password" placeholder="Enter password..." style="width:100%;padding:10px 14px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.15);border-radius:8px;color:#FFFFFF;font-size:13px;outline:none;">
+          <div style="position:relative;display:flex;align-items:center;width:100%;">
+            <input type="password" id="login-password" required autocomplete="current-password" placeholder="Enter password..." style="width:100%;padding:10px 38px 10px 14px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.2);border-radius:8px;color:#FFFFFF;font-size:14px;outline:none;cursor:text;">
+            <button type="button" id="btn-toggle-pwd" style="position:absolute;right:10px;background:none;border:none;color:#94A3B8;cursor:pointer;padding:4px;display:flex;align-items:center;justify-content:center;" title="Show/Hide Password">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+            </button>
+          </div>
         </div>
         <div id="login-error-msg" style="display:none;color:#FF5263;font-size:12px;padding:4px 0;"></div>
         <button type="submit" id="btn-login-submit" class="btn btn-primary" style="margin-top:8px;padding:10px 16px;width:100%;display:flex;align-items:center;justify-content:center;gap:6px;font-weight:600;background:linear-gradient(135deg, #E95420, #C74316);border:none;cursor:pointer;">

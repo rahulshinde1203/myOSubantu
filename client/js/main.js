@@ -257,6 +257,14 @@ document.addEventListener("DOMContentLoaded", () => {
     userAvatar.addEventListener("click", () => showLogin());
   }
 
+  const togglePwdBtn = document.getElementById("btn-toggle-pwd");
+  if (togglePwdBtn && loginPasswordInput) {
+    togglePwdBtn.addEventListener("click", () => {
+      const isPwd = loginPasswordInput.type === "password";
+      loginPasswordInput.type = isPwd ? "text" : "password";
+    });
+  }
+
   if (skipLoginBtn) {
     skipLoginBtn.addEventListener("click", () => {
       hideLogin();
