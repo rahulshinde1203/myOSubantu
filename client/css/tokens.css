@@ -1,0 +1,117 @@
+/**
+ * Ubuntu Server OS — Design System Tokens
+ * Theme: macOS-Level Precision Dark Workstation (Frosted Glass & Vibrancy)
+ */
+
+:root {
+  /* Surface Foundations (Translucent Frosted Glass & Deep Navy) */
+  --color-bg-app: #060E1A;
+  --color-surface-glass: rgba(11, 27, 50, 0.72);
+  --color-surface-glass-elevated: rgba(16, 37, 65, 0.85);
+  --color-surface-panel: #0A192F;
+  --color-surface-elevated: #102644;
+  --color-surface-sunken: #030A14;
+  --color-surface-hover: rgba(255, 255, 255, 0.06);
+  --color-surface-active: rgba(255, 255, 255, 0.12);
+
+  /* Glassmorphism & Structural Borders */
+  --glass-blur: blur(24px) saturate(190%);
+  --glass-blur-subtle: blur(12px);
+  --color-border-glass: rgba(255, 255, 255, 0.09);
+  --color-border-default: #172F4D;
+  --color-border-subtle: #0F2238;
+  --color-border-strong: #234774;
+  --color-border-focus: #2196F3;
+
+  /* macOS Level Inset Lighting & Shadows */
+  --shadow-window: 0 24px 64px -8px rgba(0, 0, 0, 0.75), 0 0 0 1px var(--color-border-glass), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  --shadow-card: 0 8px 24px -4px rgba(0, 0, 0, 0.45), 0 0 0 1px var(--color-border-glass), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  --shadow-elevated: 0 16px 36px -6px rgba(0, 0, 0, 0.65), 0 0 0 1px var(--color-border-strong);
+  --shadow-popover: 0 20px 48px -4px rgba(0, 0, 0, 0.8), 0 0 0 1px var(--color-border-glass);
+
+  /* High-Contrast Typography */
+  --color-text-primary: #F2F5F8;
+  --color-text-secondary: #90A4C0;
+  --color-text-muted: #556D8C;
+  --color-text-inverse: #060E1A;
+
+  /* Semantic Subsystem & Hardware Accents */
+  --color-brand-orange: #E95420;
+  --color-brand-orange-tint: rgba(233, 84, 32, 0.16);
+  --color-brand-orange-border: rgba(233, 84, 32, 0.45);
+
+  --color-accent-blue: #2196F3;
+  --color-accent-blue-hover: #1E88E5;
+  --color-accent-blue-tint: rgba(33, 150, 243, 0.16);
+  --color-accent-blue-border: rgba(33, 150, 243, 0.45);
+
+  --color-status-green: #2DDC88;
+  --color-status-green-tint: rgba(45, 220, 136, 0.16);
+  --color-status-green-border: rgba(45, 220, 136, 0.45);
+
+  --color-status-amber: #FFB547;
+  --color-status-amber-tint: rgba(255, 181, 71, 0.16);
+  --color-status-amber-border: rgba(255, 181, 71, 0.45);
+
+  --color-accent-violet: #A970FF;
+  --color-accent-violet-tint: rgba(169, 112, 255, 0.16);
+  --color-accent-violet-border: rgba(169, 112, 255, 0.45);
+
+  --color-status-red: #FF5263;
+  --color-status-red-tint: rgba(255, 82, 99, 0.18);
+  --color-status-red-border: rgba(255, 82, 99, 0.50);
+
+  /* macOS Traffic Light Colors */
+  --mac-traffic-close: #FF5F56;
+  --mac-traffic-min: #FFBD2E;
+  --mac-traffic-max: #27C93F;
+
+  /* Typography Stacks */
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "SF Mono", "Ubuntu Mono", "Cascadia Code", "Roboto Mono", Menlo, Consolas, monospace;
+
+  /* Typography Sizing */
+  --text-hero: 1.875rem;   /* 30px */
+  --text-h1: 1.25rem;      /* 20px */
+  --text-h2: 0.9375rem;    /* 15px */
+  --text-body: 0.8125rem;  /* 13px */
+  --text-caption: 0.6875rem; /* 11px */
+  --text-code: 0.75rem;    /* 12px */
+
+  --leading-hero: 2.125rem;
+  --leading-h1: 1.625rem;
+  --leading-h2: 1.25rem;
+  --leading-body: 1.125rem;
+  --leading-caption: 0.9375rem;
+  --leading-code: 1.0625rem;
+
+  /* 8pt Spacing Scale */
+  --space-2xs: 2px;
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 12px;
+  --space-lg: 16px;
+  --space-xl: 24px;
+  --space-2xl: 32px;
+
+  /* Radii */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-pill: 9999px;
+
+  /* Motion & Animation Physics */
+  --transition-instant: 80ms cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-quick: 160ms cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-panel: 280ms cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-metric: 400ms cubic-bezier(0.2, 0, 0, 1);
+
+  /* Sizing Metrics */
+  --topbar-height: 46px;
+  --dock-width-desktop: 204px;
+  --dock-width-compact: 60px;
+  --right-rail-width: 328px;
+  --terminal-drawer-collapsed: 40px;
+  --terminal-drawer-expanded: 280px;
+}

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Ubuntu Server OS — MacBook Workstation</title>
+
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            mac: {
+              bg: '#080D1A',
+              panel: '#0D1726',
+              glass: 'rgba(13, 23, 38, 0.78)',
+              orange: '#E95420',
+              blue: '#2196F3',
+              green: '#2DDC88',
+              amber: '#FFB547',
+              violet: '#A970FF',
+              red: '#FF5263'
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Typography & macOS Stylesheets -->
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components/dashboard.css">
+  <link rel="stylesheet" href="css/components/datatable.css">
+  <link rel="stylesheet" href="css/components/window.css">
+  <link rel="stylesheet" href="css/components/modal.css">
+  <link rel="stylesheet" href="css/components/terminal.css">
+  <link rel="stylesheet" href="css/macos.css">
+</head>
+<body class="macos-desktop">
+
+  <!-- ===================================================================
+       1. macOS TOP MENU BAR
+       =================================================================== -->
+  <header class="macos-menubar" role="banner">
+    <div class="macos-menu-left">
+      <!-- Apple/Ubuntu Logo Brand -->
+      <div class="macos-menu-item app-name" id="menu-ubuntu-logo">
+        <svg class="brand-icon" viewBox="0 0 24 24" style="width:16px;height:16px;">
+          <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fill="none"/>
+          <circle cx="12" cy="5" r="2"/>
+          <circle cx="6" cy="16" r="2"/>
+          <circle cx="18" cy="16" r="2"/>
+        </svg>
+        <span style="font-weight:700;">Ubuntu Server OS</span>
+      </div>
+      <span class="macos-menu-item" style="font-weight:600;">Activity</span>
+      <span class="macos-menu-item">Diagnostics</span>
+      <span class="macos-menu-item">Services</span>
+      <span class="macos-menu-item">Terminal</span>
+      <span class="macos-menu-item">Window</span>
+      <span class="macos-menu-item">Help</span>
+    </div>
+
+    <div class="macos-menu-right">
+      <!-- Hostname & Mode -->
+      <span class="macos-control-pill" id="tb-hostname">srv-prod-node01.lan</span>
+      <span class="mode-badge" id="tb-mode-badge" style="padding:1px 7px;font-size:10px;">
+        <span class="indicator-dot" style="width:5px;height:5px;border-radius:50%;background:currentColor;"></span>
+        <span id="tb-mode-text">MOCK DATA</span>
+      </span>
+
+      <!-- Telemetry Spark Mini -->
+      <div class="macos-menu-right-item" title="Live CPU Load">
+        <span style="color:#38BDF8;font-weight:600;font-size:11px;">CPU</span>
+        <div class="spark-bar-bg" style="width:40px;height:5px;">
+          <div class="spark-bar-fill cpu" id="tb-spark-cpu" style="width: 24%;"></div>
+        </div>
+        <span class="tabular-nums" id="tb-val-cpu" style="font-size:11px;">24%</span>
+      </div>
+
+      <div class="macos-menu-right-item" title="Live Memory Load">
+        <span style="color:#2DDC88;font-weight:600;font-size:11px;">MEM</span>
+        <div class="spark-bar-bg" style="width:40px;height:5px;">
+          <div class="spark-bar-fill mem" id="tb-spark-mem" style="width: 48%;"></div>
+        </div>
+        <span class="tabular-nums" id="tb-val-mem" style="font-size:11px;">48%</span>
+      </div>
+
+      <!-- VPN Connectivity -->
+      <div class="macos-menu-right-item" title="Encrypted VPN Active">
+        <span class="status-dot"></span>
+        <span style="color:#2DDC88;font-weight:600;font-size:11px;">VPN</span>
+      </div>
+
+      <!-- Spotlight Search Trigger -->
+      <div class="macos-menu-right-item" id="tb-btn-spotlight" title="Spotlight Search (Cmd + K)" style="cursor:pointer;padding:2px 4px;border-radius:4px;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+      </div>
+
+      <!-- Control Center Trigger -->
+      <div class="macos-menu-right-item" id="tb-btn-control-center" title="Control Center" style="cursor:pointer;padding:2px 4px;border-radius:4px;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="4" y1="21" x2="4" y2="14"></line><line x1="4" y1="10" x2="4" y2="3"></line><line x1="12" y1="21" x2="12" y2="12"></line><line x1="12" y1="8" x2="12" y2="3"></line><line x1="20" y1="21" x2="20" y2="16"></line><line x1="20" y1="12" x2="20" y2="3"></line><line x1="1" y1="14" x2="7" y2="14"></line><line x1="9" y1="8" x2="15" y2="8"></line><line x1="17" y1="16" x2="23" y2="16"></line></svg>
+      </div>
+
+      <!-- Date & Clock (Opens Notification Center) -->
+      <span class="tabular-nums" id="tb-clock" title="Open Notifications & Widgets (Cmd + Shift + N)" style="font-weight:600;color:#F1F5F9;font-size:12px;cursor:pointer;padding:2px 4px;border-radius:4px;">Thu Oct 22 15:40 UTC</span>
+
+      <!-- User Avatar -->
+      <div style="display:flex;align-items:center;gap:4px;cursor:pointer;" title="Logged in as root / operator">
+        <span style="width:20px;height:20px;border-radius:50%;background:rgba(233,84,32,0.25);border:1px solid #E95420;color:#E95420;font-size:10px;display:flex;align-items:center;justify-content:center;font-weight:bold;">U</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===================================================================
+       2. macOS DESKTOP CANVAS
+       =================================================================== -->
+  <main id="macos-canvas" role="main" aria-label="macOS Desktop Canvas">
+    <!-- Desktop Windows Container -->
+  </main>
+
+  <!-- ===================================================================
+       3. macOS FLOATING GLASS DOCK
+       =================================================================== -->
+  <div class="macos-dock-wrapper" id="macos-dock-wrapper"></div>
+
+  <!-- TOAST NOTIFICATION CONTAINER -->
+  <div id="toast-container" aria-live="polite"></div>
+
+  <!-- DANGEROUS ACTION: REBOOT CONFIRMATION MODAL -->
+  <div class="modal-backdrop" id="reboot-modal" role="dialog" aria-modal="true" aria-labelledby="modal-reboot-title">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--color-status-red)" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+        <span class="modal-title" id="modal-reboot-title">Confirm Host Reboot</span>
+      </div>
+      <div class="modal-body">
+        <div class="danger-banner">
+          <strong>CRITICAL WARNING:</strong> Rebooting will immediately terminate all active network connections and running services. Remote web access will be unavailable for ~60 seconds.
+        </div>
+        <p>To confirm that you intend to restart this production host, please type the server hostname below:</p>
+        <div style="font-family:'SF Mono',monospace;font-size:12px;color:var(--color-brand-orange);background:rgba(0,0,0,0.5);padding:6px;border-radius:4px;text-align:center;">
+          srv-prod-node01
+        </div>
+        <input type="text" id="reboot-challenge-input" placeholder="Type srv-prod-node01 to confirm..." style="background:rgba(0,0,0,0.4);border:1px solid rgba(255,255,255,0.1);border-radius:6px;padding:8px 12px;color:#FFFFFF;width:100%;">
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" id="btn-cancel-reboot">Cancel</button>
+        <button class="btn btn-danger" id="btn-confirm-reboot" disabled>Reboot Host Now</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- APPLICATION ENTRYPOINT (ES MODULE) -->
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>

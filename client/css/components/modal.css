@@ -1,0 +1,141 @@
+/**
+ * Ubuntu Server OS — Modals, Dialogs & Toast Notifications
+ */
+
+/* Modal Backdrop */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(4, 13, 26, 0.75);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--transition-quick);
+}
+
+.modal-backdrop.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Modal Dialog */
+.modal-dialog {
+  width: 90%;
+  max-width: 480px;
+  background: var(--color-surface-panel);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-modal);
+  transform: translateY(8px) scale(0.98);
+  transition: transform var(--transition-quick);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.modal-backdrop.open .modal-dialog {
+  transform: translateY(0) scale(1);
+}
+
+.modal-header {
+  padding: var(--space-md);
+  border-bottom: 1px solid var(--color-border-subtle);
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  background: var(--color-surface-sunken);
+}
+
+.modal-title {
+  font-size: var(--text-h2);
+  font-weight: 700;
+  color: var(--color-text-primary);
+  flex: 1;
+}
+
+.modal-body {
+  padding: var(--space-lg);
+  color: var(--color-text-secondary);
+  font-size: var(--text-body);
+  line-height: var(--leading-body);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.modal-footer {
+  padding: var(--space-md);
+  background: var(--color-surface-sunken);
+  border-top: 1px solid var(--color-border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-sm);
+}
+
+/* Dangerous Action Banner */
+.danger-banner {
+  background: var(--color-status-red-tint);
+  border-left: 3px solid var(--color-status-red);
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--radius-sm);
+  color: #FFA2AA;
+  font-size: var(--text-caption);
+}
+
+/* Toast Container */
+#toast-container {
+  position: fixed;
+  bottom: var(--space-xl);
+  right: var(--space-xl);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  z-index: 3000;
+  pointer-events: none;
+}
+
+.toast {
+  pointer-events: auto;
+  min-width: 280px;
+  max-width: 400px;
+  background: var(--color-surface-elevated);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-elevated);
+  padding: var(--space-sm) var(--space-md);
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-sm);
+  transform: translateX(120%);
+  transition: transform var(--transition-quick);
+  font-size: var(--text-body);
+}
+
+.toast.show {
+  transform: translateX(0);
+}
+
+.toast.toast-success { border-left: 3px solid var(--color-status-green); }
+.toast.toast-warning { border-left: 3px solid var(--color-status-amber); }
+.toast.toast-error { border-left: 3px solid var(--color-status-red); }
+.toast.toast-info { border-left: 3px solid var(--color-accent-blue); }
+
+.toast-content {
+  flex: 1;
+}
+
+.toast-title {
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin-bottom: 2px;
+}
+
+.toast-message {
+  color: var(--color-text-secondary);
+  font-size: var(--text-caption);
+}

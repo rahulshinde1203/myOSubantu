@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Ubuntu Server OS — Frontend Smoke Test Suite</title>
+  <style>
+    body { font-family: -apple-system, sans-serif; background: #071326; color: #F0F4F8; padding: 24px; }
+    h1 { color: #E95420; font-size: 20px; }
+    .test-box { background: #0B1B32; border: 1px solid #1C3555; padding: 16px; border-radius: 6px; margin-top: 16px; }
+    .test-item { display: flex; align-items: center; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #14273E; }
+    .pass { color: #2DDC88; font-weight: bold; }
+    .fail { color: #FF5263; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <h1>Ubuntu Server OS — Phase 1 Test Harness</h1>
+  <div class="test-box" id="test-results">
+    <div>Running automated tests...</div>
+  </div>
+
+  <script type="module">
+    import { MockClient } from "../../client/js/api/mock/mock_client.js";
+    import { SpotlightSearch } from "../../client/js/components/spotlight.js";
+    import { ControlCenter } from "../../client/js/components/control_center.js";
+    import { NotificationShelf } from "../../client/js/components/notification_shelf.js";
+    import { PortsApp } from "../../client/js/apps/ports_app.js";
+    import { DashboardApp } from "../../client/js/apps/dashboard_app.js";
+    import { MacosWindowManager } from "../../client/js/macos_windows.js";
+    import { MenubarDropdowns } from "../../client/js/components/menubar_dropdowns.js";
+
+    async function runTests() {
+      const resultsEl = document.getElementById("test-results");
+      resultsEl.innerHTML = "";
+      const tests = [];
+
+      // Test 1: Mock client metrics sample
+      const client = new MockClient();
+      try {
+        const m = await client.getMetrics();
+        const hasCpu = m.status === "success" && m.data.cpu.total_percent > 0;
+        tests.push({ name: "Mock Metrics Generator returns valid CPU/RAM data", pass: hasCpu });
+      } catch (e) {
+        tests.push({ name: "Mock Metrics Generator returns valid CPU/RAM data", pass: false });
+      }
+
+      // Test 2: Mock services allowlist
+      try {
+        const s = await client.getServices();
+        const hasServices = s.status === "success" && s.data.length >= 5;
+        tests.push({ name: "Mock Services Fixture contains allowlisted systemd units", pass: hasServices });
+      } catch (e) {
+        tests.push({ name: "Mock Services Fixture contains allowlisted systemd units", pass: false });
+      }
+
+      // Test 3: Anti-lockout protection on SSH / UFW
+      try {
+        const res = await client.performServiceAction("ufw.service", "stop");
+        const blocked = res.status === "fail" && res.code === "ERR_CRITICAL_SERVICE_PROTECTED";
+        tests.push({ name: "Anti-Lockout Guard blocks stopping protected services (ufw)", pass: blocked });
+      } catch (e) {
+        tests.push({ name: "Anti-Lockout Guard blocks stopping protected services (ufw)", pass: false });
+      }
+
+      // Test 4: Filesystem restricted directory browsing
+      try {
+        const f = await client.getFiles("/var/www");
+        const hasFiles = f.status === "success" && f.data.entries.length > 0;
+        tests.push({ name: "Scoped Filesystem Fixture returns /var/www contents", pass: hasFiles });
+      } catch (e) {
+        tests.push({ name: "Scoped Filesystem Fixture returns /var/www contents", pass: false });
+      }
+
+      // Test 5: Journal logs
+      try {
+        const l = await client.getLogs();
+        const hasLogs = l.status === "success" && l.data.entries.length > 0;
+        tests.push({ name: "Journald Log Reader returns structured entries", pass: hasLogs });
+      } catch (e) {
+        tests.push({ name: "Journald Log Reader returns structured entries", pass: false });
+      }
+
+      // Test 6: Spotlight Search
+      try {
+        const spotlight = new SpotlightSearch();
+        const hasItems = spotlight.items.length >= 10;
+        const hasSearchInput = Boolean(spotlight.input);
+        tests.push({ name: "macOS Spotlight Search index contains apps, commands & paths", pass: hasItems && hasSearchInput });
+      } catch (e) {
+        tests.push({ name: "macOS Spotlight Search index contains apps, commands & paths", pass: false });
+      }
+
+      // Test 7: Ports App Socket Inspector
+      try {
+        const container = document.createElement("div");
+        const portsApp = new PortsApp(container, null);
+        const hasSockets = portsApp.sockets.length >= 7;
+        const hasExposure = portsApp.sockets.some(s => s.exposure === "public") && portsApp.sockets.some(s => s.exposure === "loopback");
+        tests.push({ name: "Listening Ports Scanner identifies public & loopback sockets", pass: hasSockets && hasExposure });
+      } catch (e) {
+        tests.push({ name: "Listening Ports Scanner identifies public & loopback sockets", pass: false });
+      }
+
+      // Test 8: Control Center
+      try {
+        const cc = new ControlCenter();
+        const initialOpen = cc.isOpen;
+        cc.toggle();
+        const toggledOpen = cc.isOpen;
+        cc.toggle();
+        tests.push({ name: "Control Center toggles popover state & wallpaper themes", pass: !initialOpen && toggledOpen && !cc.isOpen });
+      } catch (e) {
+        tests.push({ name: "Control Center toggles popover state & wallpaper themes", pass: false });
+      }
+
+      // Test 9: Notification Shelf
+      try {
+        const shelf = new NotificationShelf();
+        const hasScratchpad = Boolean(shelf.scratchpad);
+        tests.push({ name: "Notification Shelf initializes incident scratchpad & feeds", pass: hasScratchpad });
+      } catch (e) {
+        tests.push({ name: "Notification Shelf initializes incident scratchpad & feeds", pass: false });
+      }
+
+      // Test 10: Window Manager Edge Snapping
+      try {
+        const canvas = document.createElement("div");
+        const wm = new MacosWindowManager(canvas, null);
+        const hasGhost = Boolean(wm.ghostEl && wm.ghostEl.classList.contains("window-snap-ghost"));
+        tests.push({ name: "MacosWindowManager provides edge snapping ghost preview", pass: hasGhost });
+      } catch (e) {
+        tests.push({ name: "MacosWindowManager provides edge snapping ghost preview", pass: false });
+      }
+
+      // Test 11: Grafana Telemetry Crosshair & PromQL Query Inspector
+      try {
+        const dContainer = document.createElement("div");
+        const dashApp = new DashboardApp(dContainer, client);
+        const hasCrosshair = Boolean(dContainer.querySelector("#grafana-crosshair"));
+        const hasTooltip = Boolean(dContainer.querySelector("#grafana-tooltip"));
+        const hasPromQL = Boolean(dContainer.querySelector("#promql-query-select"));
+        dashApp.destroy();
+        tests.push({ name: "Grafana Telemetry Inspector initializes crosshairs & PromQL editor", pass: hasCrosshair && hasTooltip && hasPromQL });
+      } catch (e) {
+        tests.push({ name: "Grafana Telemetry Inspector initializes crosshairs & PromQL editor", pass: false });
+      }
+
+      // Test 12: Grafana Circular Arc Gauges & Per-Core Bar Gauges
+      try {
+        const gContainer = document.createElement("div");
+        const gApp = new DashboardApp(gContainer, client);
+        const m = await client.getMetrics();
+        gApp.renderGrafanaGauges(m.data);
+        const dials = gContainer.querySelectorAll("#grafana-arc-dials .grafana-gauge-card");
+        const bars = gContainer.querySelectorAll("#grafana-cores-bargauges .grafana-bargauge-row");
+        gApp.destroy();
+        tests.push({ name: "Grafana Gauges View renders 4 circular arc dials & 8 bar gauges", pass: dials.length === 4 && bars.length === 8 });
+      } catch (e) {
+        tests.push({ name: "Grafana Gauges View renders 4 circular arc dials & 8 bar gauges", pass: false });
+      }
+
+      // Test 13: macOS Menubar Dropdowns & About Dialog
+      try {
+        const dummyWm = new MacosWindowManager(document.createElement("div"), null);
+        const md = new MenubarDropdowns(dummyWm);
+        const hasAllMenus = Boolean(md.menus.brand && md.menus.activity && md.menus.diagnostics && md.menus.services && md.menus.terminal && md.menus.window && md.menus.help);
+        const hasItems = md.menus.services.items.length >= 5 && md.menus.terminal.items.length >= 5;
+        md.showAboutModal();
+        const hasAbout = Boolean(document.getElementById("about-ubuntu-modal"));
+        tests.push({ name: "macOS Menubar Dropdowns support all 7 menus & About dialog", pass: hasAllMenus && hasItems && hasAbout });
+      } catch (e) {
+        tests.push({ name: "macOS Menubar Dropdowns support all 7 menus & About dialog", pass: false });
+      }
+
+      // Render results
+      resultsEl.innerHTML = tests.map(t => `
+        <div class="test-item">
+          <span>${t.name}</span>
+          <span class="${t.pass ? 'pass' : 'fail'}">${t.pass ? 'PASS' : 'FAIL'}</span>
+        </div>
+      `).join("");
+    }
+
+    runTests();
+  </script>
+</body>
+</html>

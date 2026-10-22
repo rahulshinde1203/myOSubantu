@@ -1,0 +1,145 @@
+/**
+ * Ubuntu Server OS — macOS Style Floating Windows
+ */
+
+.os-window {
+  position: absolute;
+  background: var(--color-surface-glass-elevated);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--color-border-glass);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-window);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  z-index: 100;
+  min-width: 340px;
+  min-height: 240px;
+  transition: box-shadow var(--transition-instant);
+}
+
+.os-window.active-window {
+  border-color: rgba(33, 150, 243, 0.4);
+  box-shadow: 0 28px 72px -8px rgba(0, 0, 0, 0.85), 0 0 0 1px var(--color-accent-blue-border);
+}
+
+.os-window.maximized {
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  border-radius: 0;
+  border: none;
+}
+
+.os-window.minimized {
+  display: none;
+}
+
+/* Window Titlebar (macOS Style Header) */
+.window-titlebar {
+  height: 38px;
+  background: rgba(255, 255, 255, 0.03);
+  border-bottom: 1px solid var(--color-border-glass);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--space-md);
+  cursor: grab;
+  user-select: none;
+}
+
+.os-window.active-window .window-titlebar {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.window-title {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  font-size: var(--text-body);
+  font-weight: 600;
+  color: var(--color-text-primary);
+  letter-spacing: -0.01em;
+}
+
+.window-icon {
+  width: 14px;
+  height: 14px;
+  fill: currentColor;
+}
+
+/* macOS Traffic Light Buttons */
+.window-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.win-btn {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: transform var(--transition-instant);
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.3);
+}
+
+.win-btn-close {
+  background: var(--mac-traffic-close);
+  box-shadow: 0 0 4px rgba(255, 95, 86, 0.4);
+}
+.win-btn-minimize {
+  background: var(--mac-traffic-min);
+  box-shadow: 0 0 4px rgba(255, 189, 46, 0.4);
+}
+.win-btn-maximize {
+  background: var(--mac-traffic-max);
+  box-shadow: 0 0 4px rgba(39, 201, 63, 0.4);
+}
+
+/* macOS Inset Glyph on Hover */
+.win-btn::after {
+  content: '';
+  opacity: 0;
+  font-size: 8px;
+  line-height: 1;
+  font-weight: bold;
+  color: rgba(0, 0, 0, 0.6);
+  transition: opacity var(--transition-instant);
+}
+
+.window-controls:hover .win-btn-close::after { content: '×'; opacity: 1; }
+.window-controls:hover .win-btn-minimize::after { content: '−'; opacity: 1; }
+.window-controls:hover .win-btn-maximize::after { content: '+'; opacity: 1; }
+
+.win-btn:hover {
+  transform: scale(1.08);
+}
+
+/* Window Body Content */
+.window-body {
+  flex: 1;
+  overflow: auto;
+  padding: var(--space-lg);
+  background: var(--color-surface-panel);
+  display: flex;
+  flex-direction: column;
+}
+
+/* Resize Handles */
+.window-resize-handle {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 14px;
+  height: 14px;
+  cursor: se-resize;
+  background: linear-gradient(135deg, transparent 50%, var(--color-border-strong) 50%);
+}

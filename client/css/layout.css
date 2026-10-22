@@ -1,0 +1,336 @@
+/**
+ * Ubuntu Server OS — Main Layout Grid (macOS Precision Workstation)
+ */
+
+#app-root {
+  display: flex;
+  flex-direction: column;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  position: relative;
+  background-color: var(--color-bg-app);
+  background-image: 
+    radial-gradient(circle at 10% 15%, rgba(33, 150, 243, 0.08) 0%, transparent 40%),
+    radial-gradient(circle at 90% 85%, rgba(233, 84, 32, 0.06) 0%, transparent 40%);
+}
+
+/* 1. TOP BAR (macOS Frosted Menu Bar) */
+#topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: var(--topbar-height);
+  padding: 0 var(--space-lg);
+  background: var(--color-surface-glass);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border-bottom: 1px solid var(--color-border-glass);
+  z-index: 1000;
+  user-select: none;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.topbar-left, .topbar-center, .topbar-right {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.topbar-brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  color: var(--color-text-primary);
+  font-weight: 700;
+  font-size: var(--text-h2);
+  letter-spacing: -0.01em;
+}
+
+.brand-icon {
+  width: 22px;
+  height: 22px;
+  fill: var(--color-brand-orange);
+  filter: drop-shadow(0 2px 6px rgba(233, 84, 32, 0.4));
+}
+
+.topbar-divider {
+  width: 1px;
+  height: 16px;
+  background: var(--color-border-default);
+}
+
+.topbar-hostname {
+  font-family: var(--font-mono);
+  font-size: var(--text-body);
+  color: var(--color-text-secondary);
+  font-weight: 500;
+  padding: 2px 6px;
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: var(--radius-sm);
+}
+
+/* Prototype Mode Indicator Badge */
+.mode-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: 3px 9px;
+  border-radius: var(--radius-pill);
+  font-size: var(--text-caption);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  background: var(--color-brand-orange-tint);
+  border: 1px solid var(--color-brand-orange-border);
+  color: var(--color-brand-orange);
+  cursor: pointer;
+  transition: all var(--transition-instant);
+}
+
+.mode-badge:hover {
+  background: rgba(233, 84, 32, 0.24);
+}
+
+.mode-badge.live {
+  background: var(--color-status-green-tint);
+  border-color: var(--color-status-green-border);
+  color: var(--color-status-green);
+}
+
+.topbar-sparks {
+  display: flex;
+  align-items: center;
+  gap: var(--space-lg);
+}
+
+.spark-mini {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  font-size: var(--text-caption);
+  color: var(--color-text-secondary);
+  font-weight: 600;
+}
+
+.spark-bar-bg {
+  width: 52px;
+  height: 6px;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: var(--radius-pill);
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.spark-bar-fill {
+  height: 100%;
+  border-radius: var(--radius-pill);
+  transition: width var(--transition-metric);
+}
+.spark-bar-fill.cpu { background: var(--color-accent-blue); box-shadow: 0 0 6px rgba(33, 150, 243, 0.6); }
+.spark-bar-fill.mem { background: var(--color-status-green); box-shadow: 0 0 6px rgba(45, 220, 136, 0.6); }
+
+.topbar-clock {
+  font-family: var(--font-mono);
+  font-size: var(--text-body);
+  color: var(--color-text-primary);
+  font-variant-numeric: tabular-nums;
+  font-weight: 500;
+}
+
+.topbar-vpn-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--text-caption);
+  font-weight: 600;
+  color: var(--color-status-green);
+}
+
+.status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: var(--color-status-green);
+  box-shadow: 0 0 8px rgba(45, 220, 136, 0.8);
+}
+
+/* 2. BODY WORKSPACE WRAPPER */
+#workspace-container {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+}
+
+/* 3. LEFT DOCK (macOS Frosted Sidebar) */
+#dock {
+  width: var(--dock-width-desktop);
+  background: var(--color-surface-glass);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border-right: 1px solid var(--color-border-glass);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: var(--space-md) var(--space-xs);
+  transition: width var(--transition-panel);
+  z-index: 900;
+  flex-shrink: 0;
+}
+
+.dock-nav-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.dock-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: 8px var(--space-md);
+  border-radius: var(--radius-md);
+  color: var(--color-text-secondary);
+  font-size: var(--text-body);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition-instant);
+  position: relative;
+  text-decoration: none;
+}
+
+.dock-item:hover {
+  background: var(--color-surface-hover);
+  color: var(--color-text-primary);
+}
+
+.dock-item.active {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--color-text-primary);
+  font-weight: 600;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 2px 8px rgba(0, 0, 0, 0.25);
+}
+
+.dock-item.active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 6px;
+  bottom: 6px;
+  width: 3px;
+  background: var(--color-brand-orange);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  box-shadow: 0 0 8px rgba(233, 84, 32, 0.8);
+}
+
+.dock-icon {
+  width: 17px;
+  height: 17px;
+  flex-shrink: 0;
+  fill: currentColor;
+}
+
+.dock-label {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dock-footer {
+  padding-top: var(--space-xs);
+  border-top: 1px solid var(--color-border-glass);
+}
+
+/* 4. MAIN WORKSPACE CANVAS & PANELS */
+#main-workspace {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: var(--space-lg);
+  gap: var(--space-lg);
+  position: relative;
+}
+
+/* 5. TOP METRIC CARDS ROW */
+.metrics-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-md);
+}
+
+/* 6. WORKSPACE CONTENT SPLIT */
+.workspace-content-grid {
+  display: grid;
+  grid-template-columns: 1fr var(--right-rail-width);
+  gap: var(--space-lg);
+  flex: 1;
+}
+
+.primary-stage {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+/* 7. RIGHT RAIL */
+#right-rail {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+/* 8. BOTTOM EXPANDABLE TERMINAL DRAWER (macOS Terminal Sheet) */
+#terminal-drawer {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: var(--terminal-drawer-collapsed);
+  background: var(--color-surface-sunken);
+  border-top: 1px solid var(--color-border-glass);
+  z-index: 950;
+  display: flex;
+  flex-direction: column;
+  transition: height var(--transition-panel);
+  box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.6);
+}
+
+#terminal-drawer.expanded {
+  height: var(--terminal-drawer-expanded);
+}
+
+.terminal-drawer-header {
+  height: var(--terminal-drawer-collapsed);
+  padding: 0 var(--space-lg);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  background: var(--color-surface-panel);
+  border-bottom: 1px solid var(--color-border-subtle);
+  user-select: none;
+}
+
+.terminal-drawer-title {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  font-family: var(--font-mono);
+  font-size: var(--text-code);
+  color: var(--color-text-secondary);
+}
+
+.terminal-drawer-body {
+  flex: 1;
+  background: #02070F;
+  padding: var(--space-sm) var(--space-lg);
+  overflow-y: auto;
+  font-family: var(--font-mono);
+  font-size: var(--text-code);
+  color: #D8DFE8;
+  line-height: var(--leading-code);
+}

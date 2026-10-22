@@ -1,0 +1,700 @@
+/**
+ * Ubuntu Server OS — Dashboard & Visual Command Diagnostics
+ * Features: Metric Cards, htop Terminal View, df -Th Visual Bars
+ */
+
+/* macOS Frosted Card Panel */
+.card-panel {
+  background: var(--color-surface-panel);
+  border: 1px solid var(--color-border-glass);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+  box-shadow: var(--shadow-card);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  transition: border-color var(--transition-quick), box-shadow var(--transition-quick);
+}
+
+.card-panel:hover {
+  border-color: rgba(255, 255, 255, 0.14);
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-md);
+}
+
+.card-title {
+  font-size: var(--text-caption);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-text-secondary);
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.card-title .card-accent-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+
+/* Metric Cards */
+.metric-card {
+  padding: var(--space-md) var(--space-lg);
+  min-height: 124px;
+  justify-content: space-between;
+  border-left-width: 3px;
+  border-radius: var(--radius-lg);
+  transition: transform var(--transition-quick), box-shadow var(--transition-quick);
+}
+
+.metric-card:hover {
+  box-shadow: var(--shadow-elevated);
+  transform: translateY(-2px);
+}
+
+.metric-card.cpu { border-left-color: var(--color-accent-blue); }
+.metric-card.mem { border-left-color: var(--color-status-green); }
+.metric-card.disk { border-left-color: var(--color-status-amber); }
+.metric-card.net { border-left-color: var(--color-accent-violet); }
+
+.metric-body {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin: var(--space-xs) 0;
+}
+
+.metric-hero {
+  font-size: var(--text-hero);
+  font-weight: 700;
+  line-height: var(--leading-hero);
+  color: var(--color-text-primary);
+  letter-spacing: -0.02em;
+}
+
+.metric-badge {
+  font-size: var(--text-caption);
+  padding: 3px 8px;
+  border-radius: var(--radius-pill);
+  font-weight: 600;
+}
+.metric-card.cpu .metric-badge { background: var(--color-accent-blue-tint); color: var(--color-accent-blue); }
+.metric-card.mem .metric-badge { background: var(--color-status-green-tint); color: var(--color-status-green); }
+.metric-card.disk .metric-badge { background: var(--color-status-amber-tint); color: var(--color-status-amber); }
+.metric-card.net .metric-badge { background: var(--color-accent-violet-tint); color: var(--color-accent-violet); }
+
+.metric-sub {
+  font-size: var(--text-caption);
+  color: var(--color-text-secondary);
+}
+
+.metric-sparkline {
+  width: 100%;
+  height: 32px;
+  margin-top: var(--space-xs);
+  overflow: hidden;
+}
+
+.metric-sparkline svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+/* Progress Bars */
+.progress-bar-container {
+  width: 100%;
+  height: 7px;
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: var(--radius-pill);
+  overflow: hidden;
+  display: flex;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  margin-top: var(--space-sm);
+}
+
+.progress-segment {
+  height: 100%;
+  border-radius: var(--radius-pill);
+  transition: width var(--transition-metric);
+}
+.progress-segment.active-mem { background: var(--color-status-green); box-shadow: 0 0 6px rgba(45, 220, 136, 0.5); }
+
+/* macOS Segmented Switcher */
+.segmented-control {
+  display: inline-flex;
+  background: var(--color-surface-sunken);
+  border: 1px solid var(--color-border-glass);
+  border-radius: var(--radius-md);
+  padding: 2px;
+  gap: 2px;
+  user-select: none;
+}
+
+.segmented-tab {
+  padding: 4px 10px;
+  font-size: var(--text-caption);
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  border-radius: calc(var(--radius-md) - 2px);
+  cursor: pointer;
+  transition: all var(--transition-instant);
+}
+
+.segmented-tab:hover {
+  color: var(--color-text-primary);
+}
+
+.segmented-tab.active {
+  background: var(--color-surface-elevated);
+  color: var(--color-text-primary);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+/* =====================================================================
+   VISUAL COMMAND OUTPUT: df -Th (Filesystem Storage Bars)
+   ===================================================================== */
+.df-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.df-item {
+  background: var(--color-surface-sunken);
+  border: 1px solid var(--color-border-glass);
+  border-radius: var(--radius-md);
+  padding: var(--space-sm) var(--space-md);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  transition: border-color var(--transition-instant);
+}
+
+.df-item:hover {
+  border-color: var(--color-border-strong);
+}
+
+.df-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: var(--text-body);
+}
+
+.df-mount {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  font-family: var(--font-mono);
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.df-device {
+  font-size: var(--text-caption);
+  color: var(--color-text-muted);
+  font-weight: 400;
+}
+
+.df-type-tag {
+  font-size: var(--text-caption);
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--color-text-secondary);
+  font-family: var(--font-mono);
+}
+
+.df-stats {
+  font-family: var(--font-mono);
+  font-size: var(--text-caption);
+  color: var(--color-text-secondary);
+  display: flex;
+  gap: var(--space-md);
+}
+
+.df-bar-wrapper {
+  width: 100%;
+  height: 9px;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: var(--radius-pill);
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.df-bar-fill {
+  height: 100%;
+  border-radius: var(--radius-pill);
+  transition: width var(--transition-metric);
+}
+.df-bar-fill.safe { background: linear-gradient(90deg, #1B8A53, var(--color-status-green)); box-shadow: 0 0 6px rgba(45, 220, 136, 0.4); }
+.df-bar-fill.warn { background: linear-gradient(90deg, #D97706, var(--color-status-amber)); box-shadow: 0 0 6px rgba(255, 181, 71, 0.4); }
+.df-bar-fill.danger { background: linear-gradient(90deg, #DC2626, var(--color-status-red)); box-shadow: 0 0 6px rgba(255, 82, 99, 0.4); }
+
+/* =====================================================================
+   VISUAL COMMAND OUTPUT: htop (Terminal-Type Realtime Process Monitor)
+   ===================================================================== */
+.htop-container {
+  background: #02070F;
+  border: 1px solid var(--color-border-glass);
+  border-radius: var(--radius-md);
+  padding: var(--space-md);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: #C8D3E0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.6);
+}
+
+.htop-meter-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-xs) var(--space-lg);
+  padding-bottom: var(--space-sm);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.htop-meter-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.htop-core-num {
+  width: 18px;
+  text-align: right;
+  color: #38BDF8;
+  font-weight: 700;
+}
+
+.htop-bar-box {
+  flex: 1;
+  height: 12px;
+  background: #071526;
+  border-radius: 2px;
+  overflow: hidden;
+  display: flex;
+  border: 1px solid #14283F;
+}
+
+.htop-bar-active {
+  height: 100%;
+  background: var(--color-status-green);
+  transition: width var(--transition-metric);
+}
+
+.htop-meter-val {
+  width: 44px;
+  text-align: right;
+  color: #F0F4F8;
+  font-weight: 600;
+}
+
+.htop-summary-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: #94A9C9;
+  padding: 2px 0;
+}
+
+.htop-tasks { color: #A970FF; }
+.htop-load { color: #FFB547; }
+.htop-uptime { color: #2DDC88; }
+
+.htop-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 4px;
+}
+
+.htop-table th {
+  background: #0B1C33;
+  color: #38BDF8;
+  text-align: left;
+  padding: 4px 6px;
+  font-size: 10.5px;
+  font-weight: 700;
+  border-bottom: 1px solid #183354;
+}
+
+.htop-table td {
+  padding: 3px 6px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+  white-space: nowrap;
+}
+
+.htop-table tr:hover td {
+  background: #0C213D;
+  color: #FFFFFF;
+}
+
+.htop-table td.htop-cmd {
+  color: #2DDC88;
+}
+
+/* Performance Area Chart */
+.chart-panel {
+  min-height: 280px;
+}
+
+.chart-controls {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.chart-canvas-wrapper {
+  flex: 1;
+  position: relative;
+  min-height: 200px;
+  width: 100%;
+  margin-top: var(--space-sm);
+}
+
+.chart-canvas-wrapper svg {
+  width: 100%;
+  height: 100%;
+}
+
+.chart-legend {
+  display: flex;
+  align-items: center;
+  gap: var(--space-lg);
+  margin-top: var(--space-xs);
+  font-size: var(--text-caption);
+  color: var(--color-text-secondary);
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.legend-line {
+  width: 14px;
+  height: 3px;
+  border-radius: 1px;
+}
+.legend-line.cpu { background: var(--color-accent-blue); }
+.legend-line.mem { background: var(--color-status-green); }
+
+/* Shimmer Loading Skeleton */
+.skeleton {
+  background: linear-gradient(90deg, var(--color-surface-panel) 25%, var(--color-surface-hover) 50%, var(--color-surface-panel) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.6s infinite;
+  border-radius: var(--radius-sm);
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* =====================================================================
+   GRAFANA-STYLE INTERACTIVE TELEMETRY & GAUGES
+   ===================================================================== */
+/* Interactive Crosshair & Tooltip */
+.grafana-crosshair {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: rgba(148, 163, 184, 0.5);
+  pointer-events: none;
+  display: none;
+  z-index: 10;
+}
+
+.grafana-crosshair-dot {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: 2px solid #FFFFFF;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  display: none;
+  z-index: 11;
+}
+.grafana-crosshair-dot.cpu { background: var(--color-accent-blue); box-shadow: 0 0 6px var(--color-accent-blue); }
+.grafana-crosshair-dot.mem { background: var(--color-status-green); box-shadow: 0 0 6px var(--color-status-green); }
+
+.grafana-tooltip {
+  position: absolute;
+  display: none;
+  background: rgba(10, 18, 30, 0.94);
+  backdrop-filter: blur(20px) saturate(200%);
+  -webkit-backdrop-filter: blur(20px) saturate(200%);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+  font-size: 11px;
+  color: #F1F5F9;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.6), 0 2px 8px rgba(0, 0, 0, 0.4);
+  pointer-events: none;
+  z-index: 20;
+  min-width: 180px;
+}
+
+.grafana-tooltip-header {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: #94A3B8;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding-bottom: 4px;
+  margin-bottom: 6px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.grafana-tooltip-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin: 3px 0;
+}
+
+.grafana-tooltip-series {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 500;
+}
+
+.grafana-tooltip-badge {
+  font-family: var(--font-mono);
+  font-weight: 700;
+}
+
+/* Grafana Alert Threshold Lines on Chart */
+.chart-threshold-line {
+  stroke-dasharray: 4 4;
+}
+.chart-threshold-line.warn { stroke: rgba(255, 181, 71, 0.7); }
+.chart-threshold-line.crit { stroke: rgba(255, 82, 99, 0.85); }
+
+.grafana-alert-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+.grafana-alert-pill.normal { background: rgba(45, 220, 136, 0.15); color: #2DDC88; border: 1px solid rgba(45, 220, 136, 0.3); }
+.grafana-alert-pill.alerting { background: rgba(255, 82, 99, 0.2); color: #FF5263; border: 1px solid rgba(255, 82, 99, 0.5); animation: pulseAlert 1.6s infinite; }
+
+@keyframes pulseAlert {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.8; transform: scale(0.98); }
+}
+
+/* Interactive Legend */
+.legend-item {
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 4px;
+  transition: all 120ms;
+}
+.legend-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+.legend-item.muted {
+  opacity: 0.35;
+  text-decoration: line-through;
+}
+
+/* Grafana Gauges Grid */
+.grafana-gauges-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.grafana-dial-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+
+.grafana-gauge-card {
+  background: var(--color-surface-sunken);
+  border: 1px solid var(--color-border-glass);
+  border-radius: var(--radius-md);
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  position: relative;
+  transition: border-color 150ms;
+}
+
+.grafana-gauge-card:hover {
+  border-color: rgba(255, 255, 255, 0.16);
+}
+
+.grafana-gauge-title {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 6px;
+}
+
+.grafana-gauge-svg {
+  width: 120px;
+  height: 80px;
+  overflow: visible;
+}
+
+.grafana-gauge-val {
+  font-family: var(--font-mono);
+  font-size: 16px;
+  font-weight: 700;
+  color: #FFFFFF;
+  margin-top: -14px;
+}
+
+.grafana-gauge-sub {
+  font-size: 10px;
+  color: var(--color-text-muted);
+  margin-top: 2px;
+}
+
+/* Grafana Bar Gauges Grid (Per-core) */
+.grafana-bargauge-box {
+  background: var(--color-surface-sunken);
+  border: 1px solid var(--color-border-glass);
+  border-radius: var(--radius-md);
+  padding: 12px;
+}
+
+.grafana-bargauge-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px 16px;
+  margin-top: 8px;
+}
+
+.grafana-bargauge-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+}
+
+.grafana-bargauge-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: #94A3B8;
+  width: 52px;
+  flex-shrink: 0;
+}
+
+.grafana-bargauge-track {
+  flex: 1;
+  height: 14px;
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: 3px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  position: relative;
+  overflow: hidden;
+}
+
+.grafana-bargauge-fill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 300ms ease;
+}
+
+.grafana-bargauge-val {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  width: 44px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+/* PromQL Query Editor Bar */
+.grafana-query-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding: 6px 10px;
+  margin-top: 10px;
+}
+
+.promql-tag {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  color: #E95420;
+  background: rgba(233, 84, 32, 0.15);
+  border: 1px solid rgba(233, 84, 32, 0.3);
+  padding: 2px 6px;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+.promql-select {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #38BDF8;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  border-radius: 4px;
+  padding: 4px 8px;
+  outline: none;
+  cursor: pointer;
+  flex: 1;
+}
+
+.promql-run-btn {
+  background: #2196F3;
+  color: #FFFFFF;
+  border: none;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  transition: background 120ms;
+}
+
+.promql-run-btn:hover {
+  background: #1976D2;
+}
+
+.promql-meta {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: #64748B;
+  flex-shrink: 0;
+}
+

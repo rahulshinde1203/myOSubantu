@@ -1,0 +1,144 @@
+/**
+ * Ubuntu Server OS — Responsive Layout Reorganization
+ * Breakpoints: Desktop (≥1200px), Tablet (768px-1199px), Mobile (<768px)
+ */
+
+/* 1. TABLET BREAKPOINT (768px - 1199px) */
+@media screen and (max-width: 1199px) {
+  #dock {
+    width: var(--dock-width-compact);
+  }
+
+  .dock-label {
+    display: none;
+  }
+
+  .dock-item {
+    justify-content: center;
+    padding: 12px 0;
+  }
+
+  .dock-item.active::before {
+    top: 6px;
+    bottom: 6px;
+  }
+
+  /* Metric cards collapse to 2x2 grid */
+  .metrics-row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* Right rail drops below main workspace into a 2-column row */
+  .workspace-content-grid {
+    grid-template-columns: 1fr;
+  }
+
+  #right-rail {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-md);
+  }
+}
+
+/* 2. MOBILE WORKSTATION BREAKPOINT (< 768px) */
+@media screen and (max-width: 767px) {
+  #topbar {
+    padding: 0 var(--space-sm);
+  }
+
+  .topbar-hostname, .topbar-sparks, .topbar-divider {
+    display: none;
+  }
+
+  /* Mobile Drawer Toggle */
+  #mobile-menu-btn {
+    display: inline-flex !important;
+  }
+
+  /* Dock shifts into an off-canvas slide-over drawer */
+  #dock {
+    position: fixed;
+    top: var(--topbar-height);
+    left: 0;
+    bottom: 0;
+    width: 240px;
+    transform: translateX(-100%);
+    box-shadow: 12px 0 32px rgba(0, 0, 0, 0.85);
+    z-index: 1500;
+  }
+
+  #dock.drawer-open {
+    transform: translateX(0);
+  }
+
+  .dock-label {
+    display: inline;
+  }
+
+  .dock-item {
+    justify-content: flex-start;
+    padding: 12px var(--space-md);
+    min-height: 44px; /* Touch target */
+  }
+
+  /* Main Workspace stack */
+  #main-workspace {
+    padding: var(--space-sm);
+    gap: var(--space-sm);
+  }
+
+  /* Compact 2x2 metric cards */
+  .metrics-row {
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-sm);
+  }
+
+  .metric-card {
+    min-height: 90px;
+    padding: var(--space-sm);
+  }
+
+  .metric-hero {
+    font-size: 1.35rem;
+  }
+
+  .metric-sparkline {
+    display: none; /* Conserve vertical viewport on smartphones */
+  }
+
+  /* Right rail stacks vertically */
+  #right-rail {
+    grid-template-columns: 1fr;
+  }
+
+  /* Touch Target Normalization */
+  button, .btn, .dock-item, .table-filter-group button {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Floating windows convert to full-screen sheets on mobile */
+  .os-window {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    border-radius: 0 !important;
+    border: none !important;
+    z-index: 2000 !important;
+  }
+
+  .window-resize-handle {
+    display: none;
+  }
+}
+
+/* Touch Device Target Enforcements */
+@media (pointer: coarse) {
+  button, .btn, .action-row-btn {
+    min-height: 44px;
+  }
+}

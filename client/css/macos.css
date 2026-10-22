@@ -1,0 +1,994 @@
+/**
+ * Ubuntu Server OS — macOS Sonoma/Sequoia Workstation Theme
+ * Authentic Apple macOS desktop styling with Ubuntu Server OS telemetry
+ */
+
+/* macOS Wallpaper Background with Ambient Night Glow */
+.macos-desktop {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  position: relative;
+  background: #080D1A;
+  background-image: 
+    radial-gradient(at 15% 10%, #17325C 0px, transparent 50%),
+    radial-gradient(at 85% 15%, #3B163B 0px, transparent 55%),
+    radial-gradient(at 50% 80%, #0D2447 0px, transparent 60%),
+    radial-gradient(at 90% 90%, #5E2129 0px, transparent 50%),
+    radial-gradient(at 20% 85%, #0B1930 0px, transparent 50%);
+  background-size: cover;
+  user-select: none;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Helvetica Neue", sans-serif;
+  color: #F5F7FA;
+}
+
+/* =====================================================================
+   1. macOS TOP MENU BAR
+   ===================================================================== */
+.macos-menubar {
+  height: 28px;
+  background: rgba(10, 18, 30, 0.72);
+  backdrop-filter: blur(28px) saturate(210%);
+  -webkit-backdrop-filter: blur(28px) saturate(210%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 14px;
+  font-size: 13px;
+  font-weight: 500;
+  z-index: 10000;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+}
+
+.macos-menu-left, .macos-menu-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.macos-menu-item {
+  color: #E2E8F0;
+  cursor: pointer;
+  transition: opacity 120ms;
+  font-size: 13px;
+  letter-spacing: -0.01em;
+}
+
+.macos-menu-item:hover {
+  opacity: 0.8;
+}
+
+.macos-menu-item.app-name {
+  font-weight: 700;
+  color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.macos-menu-right-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #CBD5E1;
+}
+
+.macos-control-pill {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 1px 8px;
+  border-radius: 9999px;
+  font-family: "SF Mono", "Ubuntu Mono", monospace;
+  font-size: 11px;
+}
+
+/* =====================================================================
+   2. macOS DESKTOP CANVAS & WINDOWS
+   ===================================================================== */
+#macos-canvas {
+  position: absolute;
+  top: 28px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
+}
+
+.macos-window {
+  position: absolute;
+  background: rgba(13, 23, 38, 0.82);
+  backdrop-filter: blur(32px) saturate(200%);
+  -webkit-backdrop-filter: blur(32px) saturate(200%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  box-shadow: 
+    0 24px 64px -12px rgba(0, 0, 0, 0.75),
+    0 4px 16px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  z-index: 100;
+  min-width: 480px;
+  min-height: 320px;
+  transition: box-shadow 150ms cubic-bezier(0.16, 1, 0.3, 1), transform 150ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.macos-window.focused {
+  border-color: rgba(33, 150, 243, 0.45);
+  box-shadow: 
+    0 32px 80px -12px rgba(0, 0, 0, 0.9),
+    0 0 0 1px rgba(33, 150, 243, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.macos-window.fullscreen {
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  border-radius: 0;
+  border: none;
+}
+
+.macos-window.minimized {
+  opacity: 0;
+  transform: translateY(120px) scale(0.6);
+  pointer-events: none;
+  transition: all 260ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* macOS Titlebar & Traffic Lights */
+.macos-titlebar {
+  height: 40px;
+  background: rgba(255, 255, 255, 0.04);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 14px;
+  cursor: grab;
+  user-select: none;
+}
+
+.macos-traffic-lights {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 60px;
+}
+
+.traffic-btn {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.3);
+}
+
+.traffic-close { background: #FF5F56; }
+.traffic-min { background: #FFBD2E; }
+.traffic-max { background: #27C93F; }
+
+.macos-traffic-lights:hover .traffic-close::after { content: '×'; font-size: 9px; line-height: 1; font-weight: bold; color: rgba(0, 0, 0, 0.6); }
+.macos-traffic-lights:hover .traffic-min::after { content: '−'; font-size: 9px; line-height: 1; font-weight: bold; color: rgba(0, 0, 0, 0.6); }
+.macos-traffic-lights:hover .traffic-max::after { content: '+'; font-size: 8px; line-height: 1; font-weight: bold; color: rgba(0, 0, 0, 0.6); }
+
+.macos-window-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #F1F5F9;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: 1;
+  justify-content: center;
+  margin-right: 60px; /* Balance traffic lights */
+}
+
+.macos-window-body {
+  flex: 1;
+  overflow: auto;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* =====================================================================
+   3. macOS FLOATING DOCK
+   ===================================================================== */
+.macos-dock-wrapper {
+  position: fixed;
+  bottom: 10px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
+  z-index: 9000;
+}
+
+.macos-dock {
+  pointer-events: auto;
+  height: 64px;
+  background: rgba(15, 25, 42, 0.55);
+  backdrop-filter: blur(36px) saturate(220%);
+  -webkit-backdrop-filter: blur(36px) saturate(220%);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 20px;
+  box-shadow: 
+    0 20px 48px -6px rgba(0, 0, 0, 0.65),
+    0 2px 10px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  gap: 10px;
+}
+
+.dock-app {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  cursor: pointer;
+  transition: transform 160ms cubic-bezier(0.16, 1, 0.3, 1), filter 160ms;
+}
+
+.dock-app:hover {
+  transform: translateY(-8px) scale(1.15);
+}
+
+.dock-app-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+/* App indicator dot under dock icon */
+.dock-dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #F1F5F9;
+  position: absolute;
+  bottom: -4px;
+  opacity: 0;
+  transition: opacity 150ms;
+}
+
+.dock-app.running .dock-dot {
+  opacity: 1;
+}
+
+.dock-divider {
+  width: 1px;
+  height: 38px;
+  background: rgba(255, 255, 255, 0.14);
+  margin: 0 2px;
+}
+
+/* Dock Tooltip */
+.dock-tooltip {
+  position: absolute;
+  top: -34px;
+  background: rgba(15, 23, 42, 0.9);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 6px;
+  padding: 3px 8px;
+  font-size: 11px;
+  font-weight: 500;
+  color: #FFFFFF;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 120ms, transform 120ms;
+}
+
+.dock-app:hover .dock-tooltip {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* =====================================================================
+   4. macOS SEGMENTED CONTROL TABS
+   ===================================================================== */
+.macos-segmented-bar {
+  display: inline-flex;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding: 2px;
+  gap: 2px;
+}
+
+.macos-segment-btn {
+  padding: 4px 12px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #94A3B8;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 120ms;
+  border: none;
+  background: transparent;
+}
+
+.macos-segment-btn:hover {
+  color: #F8FAFC;
+}
+
+.macos-segment-btn.active {
+  background: rgba(255, 255, 255, 0.12);
+  color: #FFFFFF;
+  font-weight: 600;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+
+/* =====================================================================
+   5. RESPONSIVE / MOBILE ADAPTATION
+   ===================================================================== */
+@media screen and (max-width: 768px) {
+  .macos-menu-left .macos-menu-item:not(.app-name) {
+    display: none;
+  }
+  .macos-menu-right #tb-hostname,
+  .macos-menu-right .macos-menu-right-item,
+  .macos-menu-right .mode-badge {
+    display: none;
+  }
+  .macos-window {
+    position: fixed !important;
+    top: 28px !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 68px !important;
+    width: 100% !important;
+    height: calc(100vh - 96px) !important;
+    border-radius: 0 !important;
+    border: none !important;
+  }
+  .macos-dock {
+    height: 52px;
+    padding: 0 8px;
+    gap: 6px;
+  }
+  .dock-app {
+    width: 38px;
+    height: 38px;
+  }
+  .dock-app-icon {
+    width: 34px;
+    height: 34px;
+  }
+}
+
+/* =====================================================================
+   6. WINDOW EDGE SNAP GHOST PREVIEW
+   ===================================================================== */
+.window-snap-ghost {
+  position: absolute;
+  display: none;
+  background: rgba(33, 150, 243, 0.18);
+  border: 2px dashed rgba(33, 150, 243, 0.6);
+  border-radius: 12px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  z-index: 999;
+  pointer-events: none;
+  transition: all 120ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* =====================================================================
+   7. WALLPAPER VARIATIONS
+   ===================================================================== */
+.macos-desktop.wallpaper-oled {
+  background: #000000 !important;
+  background-image: none !important;
+}
+
+.macos-desktop.wallpaper-aubergine {
+  background: #1C0A1C !important;
+  background-image: 
+    radial-gradient(at 20% 20%, #4D184D 0px, transparent 60%),
+    radial-gradient(at 80% 80%, #77216F 0px, transparent 55%),
+    radial-gradient(at 50% 50%, #2C001E 0px, transparent 70%) !important;
+}
+
+/* =====================================================================
+   8. macOS CONTROL CENTER POPOVER
+   ===================================================================== */
+.control-center-popover {
+  position: fixed;
+  top: 34px;
+  right: 14px;
+  width: 310px;
+  background: rgba(15, 23, 42, 0.88);
+  backdrop-filter: blur(36px) saturate(210%);
+  -webkit-backdrop-filter: blur(36px) saturate(210%);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 16px;
+  box-shadow: 
+    0 24px 60px -8px rgba(0, 0, 0, 0.8),
+    0 8px 24px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  padding: 16px;
+  display: none;
+  flex-direction: column;
+  gap: 14px;
+  z-index: 10001;
+  animation: popoverFadeIn 150ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.control-center-popover.open {
+  display: flex;
+}
+
+@keyframes popoverFadeIn {
+  from { opacity: 0; transform: translateY(-6px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.cc-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.cc-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.cc-toggle-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  transition: all 140ms;
+}
+
+.cc-toggle-card:hover {
+  background: rgba(255, 255, 255, 0.09);
+  border-color: rgba(255, 255, 255, 0.18);
+}
+
+.cc-toggle-card.active {
+  background: rgba(33, 150, 243, 0.15);
+  border-color: rgba(33, 150, 243, 0.4);
+}
+
+.cc-icon-box {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.cc-card-info {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.cc-card-title {
+  font-size: 11px;
+  font-weight: 700;
+  color: #FFFFFF;
+}
+
+.cc-card-sub {
+  font-size: 10px;
+  color: #94A3B8;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cc-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: rgba(0, 0, 0, 0.25);
+  padding: 10px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.cc-section-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 11px;
+  font-weight: 600;
+  color: #CBD5E1;
+}
+
+.cc-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 10px;
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 10px;
+  font-size: 12px;
+  color: #E2E8F0;
+  cursor: pointer;
+  transition: background 120ms;
+}
+
+.cc-row:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+/* =====================================================================
+   9. macOS SPOTLIGHT SEARCH OVERLAY
+   ===================================================================== */
+.spotlight-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 20000;
+  display: none;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 14vh;
+}
+
+.spotlight-overlay.open {
+  display: flex;
+}
+
+.spotlight-dialog {
+  width: 620px;
+  max-width: 90vw;
+  background: rgba(15, 23, 42, 0.92);
+  backdrop-filter: blur(40px) saturate(220%);
+  -webkit-backdrop-filter: blur(40px) saturate(220%);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 16px;
+  box-shadow: 
+    0 32px 80px -10px rgba(0, 0, 0, 0.85),
+    0 12px 30px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  animation: spotlightPop 160ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes spotlightPop {
+  from { opacity: 0; transform: scale(0.96); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.spotlight-search-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 18px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.spotlight-search-icon {
+  color: #94A3B8;
+  flex-shrink: 0;
+}
+
+.spotlight-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: #FFFFFF;
+  font-size: 16px;
+  font-weight: 500;
+  outline: none;
+}
+
+.spotlight-input::placeholder {
+  color: #64748B;
+  font-size: 15px;
+}
+
+.spotlight-kbd-hint {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  color: #94A3B8;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 4px;
+  padding: 2px 6px;
+}
+
+.spotlight-results {
+  max-height: 380px;
+  overflow-y: auto;
+  padding: 6px;
+}
+
+.spotlight-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 100ms;
+}
+
+.spotlight-item:hover, .spotlight-item.active {
+  background: rgba(33, 150, 243, 0.2);
+}
+
+.spotlight-item.active {
+  border: 1px solid rgba(33, 150, 243, 0.4);
+}
+
+.spotlight-item-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #38BDF8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.spotlight-item-content {
+  flex: 1;
+  overflow: hidden;
+}
+
+.spotlight-item-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #F8FAFC;
+}
+
+.spotlight-item-desc {
+  font-size: 11px;
+  color: #94A3B8;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.spotlight-item-badge {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: #64748B;
+  background: rgba(255, 255, 255, 0.04);
+  padding: 2px 8px;
+  border-radius: 6px;
+}
+
+.spotlight-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  text-align: center;
+}
+
+.spotlight-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 18px;
+  background: rgba(0, 0, 0, 0.35);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 11px;
+  color: #64748B;
+}
+
+/* =====================================================================
+   10. macOS NOTIFICATION CENTER & WIDGET SHELF
+   ===================================================================== */
+.notification-shelf {
+  position: fixed;
+  top: 28px;
+  right: 0;
+  bottom: 0;
+  width: 340px;
+  max-width: 90vw;
+  background: rgba(13, 23, 38, 0.9);
+  backdrop-filter: blur(36px) saturate(210%);
+  -webkit-backdrop-filter: blur(36px) saturate(210%);
+  border-left: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: -8px 0 32px rgba(0, 0, 0, 0.6);
+  z-index: 9999;
+  transform: translateX(100%);
+  transition: transform 220ms cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+}
+
+.notification-shelf.open {
+  transform: translateX(0);
+}
+
+.shelf-header {
+  padding: 12px 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.shelf-body {
+  padding: 14px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex: 1;
+}
+
+.widget-card {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 12px;
+}
+
+.widget-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.widget-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: #F8FAFC;
+}
+
+.widget-badge {
+  font-size: 9px;
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: 4px;
+  letter-spacing: 0.04em;
+}
+
+.widget-badge.green {
+  background: rgba(45, 220, 136, 0.15);
+  color: #2DDC88;
+  border: 1px solid rgba(45, 220, 136, 0.3);
+}
+
+.widget-badge.blue {
+  background: rgba(33, 150, 243, 0.15);
+  color: #38BDF8;
+  border: 1px solid rgba(33, 150, 243, 0.3);
+}
+
+.shelf-feed-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 6px;
+  background: rgba(0, 0, 0, 0.25);
+  border-radius: 6px;
+}
+
+.shelf-feed-time {
+  font-family: 'SF Mono', monospace;
+  font-size: 10px;
+  color: #64748B;
+  flex-shrink: 0;
+  padding-top: 1px;
+}
+
+.shelf-feed-text {
+  color: #CBD5E1;
+  line-height: 1.35;
+}
+
+/* =====================================================================
+   11. macOS MENUBAR DROPDOWN MENUS
+   ===================================================================== */
+.macos-menu-item.menu-header-active {
+  background: rgba(255, 255, 255, 0.18) !important;
+  color: #FFFFFF !important;
+  border-radius: 4px;
+}
+
+.macos-menu-dropdown {
+  position: fixed;
+  top: 28px;
+  background: rgba(15, 23, 42, 0.94);
+  backdrop-filter: blur(40px) saturate(220%);
+  -webkit-backdrop-filter: blur(40px) saturate(220%);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 8px;
+  box-shadow: 
+    0 18px 48px rgba(0, 0, 0, 0.75),
+    0 4px 14px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  padding: 4px;
+  min-width: 230px;
+  display: none;
+  flex-direction: column;
+  z-index: 10005;
+  user-select: none;
+  animation: menuFadeIn 110ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.macos-menu-dropdown.open {
+  display: flex;
+}
+
+@keyframes menuFadeIn {
+  from { opacity: 0; transform: translateY(-4px) scale(0.99); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.menu-dropdown-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px 12px;
+  border-radius: 5px;
+  font-size: 13px;
+  color: #F1F5F9;
+  cursor: pointer;
+  transition: all 80ms;
+}
+
+.menu-dropdown-item:hover {
+  background: #2563EB;
+  color: #FFFFFF;
+}
+
+.menu-item-label {
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
+.menu-item-shortcut {
+  font-size: 11px;
+  color: #94A3B8;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+  margin-left: 16px;
+}
+
+.menu-dropdown-item:hover .menu-item-shortcut {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.menu-dropdown-divider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.1);
+  margin: 4px 0;
+}
+
+/* About / Shortcuts Modal Backdrop */
+.about-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  z-index: 30000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+
+.about-modal-backdrop.open {
+  display: flex;
+}
+
+.about-dialog-box {
+  width: 360px;
+  background: rgba(15, 23, 42, 0.95);
+  backdrop-filter: blur(40px) saturate(220%);
+  -webkit-backdrop-filter: blur(40px) saturate(220%);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 14px;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.85), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  padding: 24px;
+  text-align: center;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: aboutPop 150ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes aboutPop {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.about-close-btn {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  background: transparent;
+  border: none;
+  color: #94A3B8;
+  font-size: 18px;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.about-specs-grid {
+  width: 100%;
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  text-align: left;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.spec-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 11px;
+  color: #94A3B8;
+}
+
+.spec-row strong {
+  color: #F8FAFC;
+  font-family: 'SF Mono', monospace;
+  font-size: 10px;
+}
+
+.shortcut-kbd {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  color: #F1F5F9;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 4px;
+  padding: 2px 6px;
+}
+
+

@@ -1,0 +1,304 @@
+/**
+ * Ubuntu Server OS — Data Tables, Lists & Controls
+ */
+
+/* Search & Filter Bar */
+.table-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+  margin-bottom: var(--space-sm);
+}
+
+.search-input-wrapper {
+  display: flex;
+  align-items: center;
+  background: var(--color-surface-sunken);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-md);
+  padding: 4px var(--space-sm);
+  width: 240px;
+  transition: border-color var(--transition-instant);
+}
+
+.search-input-wrapper:focus-within {
+  border-color: var(--color-accent-blue);
+  box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.2);
+}
+
+.search-input-wrapper input {
+  font-size: var(--text-body);
+  color: var(--color-text-primary);
+  width: 100%;
+}
+
+.search-input-wrapper input::placeholder {
+  color: var(--color-text-muted);
+}
+
+.table-filter-group {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Data Table Surface */
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-panel);
+}
+
+table.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: var(--text-body);
+}
+
+table.data-table th {
+  background: var(--color-surface-sunken);
+  color: var(--color-text-secondary);
+  font-size: var(--text-caption);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: var(--space-sm) var(--space-md);
+  border-bottom: 1px solid var(--color-border-default);
+  user-select: none;
+}
+
+table.data-table td {
+  padding: var(--space-sm) var(--space-md);
+  border-bottom: 1px solid var(--color-border-subtle);
+  color: var(--color-text-primary);
+  vertical-align: middle;
+}
+
+table.data-table tr:last-child td {
+  border-bottom: none;
+}
+
+table.data-table tbody tr {
+  transition: background var(--transition-instant);
+}
+
+table.data-table tbody tr:hover {
+  background: var(--color-surface-hover);
+}
+
+/* Service Unit Cell */
+.unit-cell {
+  display: flex;
+  flex-direction: column;
+}
+
+.unit-name {
+  font-weight: 600;
+  color: var(--color-text-primary);
+  font-family: var(--font-mono);
+  font-size: var(--text-code);
+}
+
+.unit-desc {
+  font-size: var(--text-caption);
+  color: var(--color-text-secondary);
+}
+
+/* Status Badges */
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 8px;
+  border-radius: var(--radius-pill);
+  font-size: var(--text-caption);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.status-pill .indicator-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+
+.status-pill.active {
+  background: var(--color-status-green-tint);
+  color: var(--color-status-green);
+  border: 1px solid var(--color-status-green-border);
+}
+.status-pill.active .indicator-dot {
+  background: var(--color-status-green);
+  box-shadow: 0 0 4px var(--color-status-green);
+}
+
+.status-pill.warning {
+  background: var(--color-status-amber-tint);
+  color: var(--color-status-amber);
+  border: 1px solid var(--color-status-amber-border);
+}
+.status-pill.warning .indicator-dot {
+  background: var(--color-status-amber);
+}
+
+.status-pill.failed, .status-pill.inactive {
+  background: var(--color-status-red-tint);
+  color: var(--color-status-red);
+  border: 1px solid var(--color-status-red-border);
+}
+.status-pill.failed .indicator-dot {
+  background: var(--color-status-red);
+}
+
+/* Standard Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: 5px 10px;
+  border-radius: var(--radius-md);
+  font-size: var(--text-body);
+  font-weight: 500;
+  transition: all var(--transition-instant);
+}
+
+.btn-sm {
+  padding: 3px 8px;
+  font-size: var(--text-caption);
+}
+
+.btn-primary {
+  background: var(--color-accent-blue);
+  color: #FFFFFF;
+}
+.btn-primary:hover {
+  background: var(--color-accent-blue-hover);
+}
+
+.btn-secondary {
+  background: var(--color-surface-elevated);
+  border: 1px solid var(--color-border-default);
+  color: var(--color-text-primary);
+}
+.btn-secondary:hover {
+  background: var(--color-surface-hover);
+  border-color: var(--color-border-strong);
+}
+
+.btn-danger {
+  background: var(--color-status-red-tint);
+  border: 1px solid var(--color-status-red-border);
+  color: var(--color-status-red);
+}
+.btn-danger:hover {
+  background: var(--color-status-red);
+  color: #FFFFFF;
+}
+
+/* Quick Actions List in Right Rail */
+.quick-actions-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.action-row-btn {
+  width: 100%;
+  justify-content: flex-start;
+  padding: 8px var(--space-sm);
+  background: var(--color-surface-sunken);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-md);
+  color: var(--color-text-primary);
+  font-size: var(--text-body);
+}
+
+.action-row-btn:hover {
+  background: var(--color-surface-hover);
+  border-color: var(--color-border-strong);
+}
+
+/* Key-Value Server Info List */
+.info-kv-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  font-size: var(--text-body);
+}
+
+.info-kv-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--color-border-subtle);
+}
+
+.info-kv-row:last-child {
+  border-bottom: none;
+}
+
+.info-key {
+  color: var(--color-text-secondary);
+  font-size: var(--text-caption);
+}
+
+.info-val {
+  color: var(--color-text-primary);
+  font-family: var(--font-mono);
+  font-size: var(--text-code);
+  font-weight: 500;
+}
+
+/* Timeline Activity Feed */
+.activity-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  position: relative;
+  padding-left: var(--space-md);
+}
+
+.activity-timeline::before {
+  content: '';
+  position: absolute;
+  left: 4px;
+  top: 4px;
+  bottom: 4px;
+  width: 2px;
+  background: var(--color-border-subtle);
+}
+
+.activity-item {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.activity-item::before {
+  content: '';
+  position: absolute;
+  left: calc(-1 * var(--space-md) + 2px);
+  top: 5px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-accent-blue);
+}
+
+.activity-title {
+  font-size: var(--text-body);
+  color: var(--color-text-primary);
+  font-weight: 500;
+}
+
+.activity-time {
+  font-size: var(--text-caption);
+  color: var(--color-text-secondary);
+  font-family: var(--font-mono);
+}

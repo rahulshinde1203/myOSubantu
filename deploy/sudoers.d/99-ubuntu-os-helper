@@ -1,0 +1,9 @@
+# Ubuntu Server OS — Scoped Sudoers Helper Policy
+# Grant ubuntulos service user execution privileges EXCLUSIVELY to the hardened helper script.
+# NOPASSWD: ALL is strictly prohibited to guarantee non-root containment.
+
+Cmnd_Alias UBUNTU_OS_CMDS = /usr/local/bin/ubuntu-os-helper systemctl [a-zA-Z0-9_\-\@\.]+, \
+                            /usr/local/bin/ubuntu-os-helper journalctl *
+
+ubuntulos ALL=(root) NOPASSWD: UBUNTU_OS_CMDS
+Defaults!UBUNTU_OS_CMDS !requiretty, env_reset, secure_path="/usr/sbin:/usr/bin:/sbin:/bin"

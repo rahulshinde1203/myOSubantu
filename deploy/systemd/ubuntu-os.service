@@ -1,0 +1,51 @@
+[Unit]
+Description=Ubuntu Server OS Web Application Daemon
+After=network.target local-fs.target
+Wants=network-online.target
+
+[Service]
+Type=notify
+User=ubuntulos
+Group=ubuntulos
+WorkingDirectory=/opt/ubuntu-server-os
+Environment="PATH=/opt/ubuntu-server-os/.venv/bin:/usr/local/bin:/usr/bin:/bin"
+Environment="UBUNTU_OS_ENV=production"
+Environment="PYTHONUNBUFFERED=1"
+
+# Execute Gunicorn binding to strict Unix Domain Socket
+ExecStart=/opt/ubuntu-server-os/.venv/bin/gunicorn \
+    --workers 4 \
+    --worker-class gthread \
+    --threads 4 \
+    --timeout 30 \
+    --bind unix:/run/ubuntu-server-os/ubuntu-os.sock \
+    --umask 0077 \
+    "server:create_app('production')"
+
+ExecReload=/bin/kill -s HUP $MAINPID
+KillMode=mixed
+TimeoutStopSec=15
+Restart=on-failure
+RestartSec=3s
+
+# Runtime directory with strict ownership
+RuntimeDirectory=ubuntu-server-os
+RuntimeDirectoryMode=0750
+
+# Sandboxing & Kernel Security Hardening
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=/var/lib/ubuntu-server-os /run/ubuntu-server-os /var/log/ubuntu-server-os
+PrivateTmp=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+RestrictRealtime=true
+RestrictSUIDSGID=true
+MemoryDenyWriteExecute=true
+NoNewPrivileges=true
+CapabilityBoundingSet=
+
+[Install]
+WantedBy=multi-user.target
